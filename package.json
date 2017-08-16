@@ -4,8 +4,9 @@
   "version": "1.0.0",
   "author": "Alexander Pope <alexander.pope@nrk.no>",
   "dependencies": {
-    "@yr/component": "6.1.0-beta.2",
+    "@yr/component": "6.1.0-beta.3",
     "@yr/is-equal": "1.0.x",
+    "@yr/runtime": "2.0.x",
     "debug": "2.3.x",
     "object-assign": "4.1.x"
   },

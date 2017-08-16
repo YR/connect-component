@@ -16,9 +16,9 @@
     performance-now "2.1.0"
     raf "3.3.2"
 
-"@yr/component@6.1.0-beta.2":
-  version "6.1.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@yr/component/-/component-6.1.0-beta.2.tgz#ec366cc602f3f25ea904c2b16a37dafdf28dd966"
+"@yr/component@6.1.0-beta.3":
+  version "6.1.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@yr/component/-/component-6.1.0-beta.3.tgz#b592f2b1f005e198793976138d97d19668550891"
   dependencies:
     "@yr/clock" "2.0.x"
     "@yr/is-equal" "1.0.x"
@@ -2309,8 +2309,8 @@ regjsparser@^0.1.4:
     jsesc "~0.5.0"
 
 remove-trailing-separator@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.0.2.tgz#69b062d978727ad14dc6b56ba4ab772fd8d70511"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
 
 repeat-element@^1.1.2:
   version "1.1.2"

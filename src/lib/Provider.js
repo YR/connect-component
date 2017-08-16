@@ -2,9 +2,11 @@
 
 const { Component, define, PropTypes } = require('@yr/component');
 const assign = require('object-assign');
+const Subscription = require('./Subscription');
 
 const DEFAULT_CONTEXT_SHAPE = {
-  data: PropTypes.object
+  data: PropTypes.object,
+  subscription: PropTypes.object
 };
 
 module.exports = {
@@ -30,7 +32,15 @@ module.exports = {
           context[key] = this.props[key];
         }
 
+        if (context.subscription === undefined) {
+          context.subscription = new Subscription(context.data);
+        }
+
         return context;
+      },
+
+      componentWillUnmount() {
+        // TODO: destroy subscription?
       },
 
       render(props) {

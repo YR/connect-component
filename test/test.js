@@ -1,6 +1,6 @@
 'use strict';
 
-const { Connect, Provider } = require('../src');
+const { connect, Provider } = require('../src');
 const { expect } = require('chai');
 const { Component, define, el, PropTypes, render } = require('@yr/component');
 const dataStore = require('@yr/data-store');
@@ -8,19 +8,17 @@ const dataStore = require('@yr/data-store');
 let data;
 
 describe('data-store-component', () => {
-  beforeEach(() => {
-    data = dataStore.create('test', {
-      foo: 'foo',
-      bar: {
-        foo: 'bar'
-      }
-    });
-  });
   afterEach(() => {
-    data.destroy();
+    if (data) data.destroy();
   });
 
   describe('Provider', () => {
+    beforeEach(() => {
+      data = dataStore.create('test', {
+        foo: 'foo'
+      });
+    });
+
     it('should render a passed child component', () => {
       expect(render(el(Provider.create(), { data }, el('div')))).to.equal('<div></div>');
     });
@@ -53,6 +51,18 @@ describe('data-store-component', () => {
         render(el(Provider.create({ locale: PropTypes.object }), { data, locale: { foo: 'le foo' } }, el(app)))
       ).to.equal('<div>le foo</div>');
       expect(Component.contextTypes).to.have.property('locale');
+    });
+  });
+
+  describe('connect()', () => {
+    beforeEach(() => {
+      data = dataStore.create('test', {
+        foo: 'foo'
+      });
+    });
+
+    it('should', () => {
+
     });
   });
 });
