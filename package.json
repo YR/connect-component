@@ -41,7 +41,6 @@
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-mocha": "^1.3.0",
-    "karma-spec-reporter": "^0.0.31",
     "mocha": "*"
   },
   "main": "src/index.js",
@@ -50,7 +49,7 @@
   "scripts": {
     "prepublish": "buddy build",
     "test": "NODE_ENV=test mocha test/test.js --reporter spec --bail",
-    "test:browser": "karma start --single-run --browsers ChromeHeadless karma.conf.js"
+    "test:browser": "buddy build && karma start --single-run --browsers ChromeHeadless karma.conf.js"
   },
   "browser": "index.js",
   "buddy": {
@@ -60,6 +59,11 @@
         "output": ".",
         "bundle": false,
         "version": "es5"
+      },
+      {
+        "input": "test/src/test-browser.js",
+        "output": "test/test-browser.js",
+        "label": "test"
       }
     ]
   }
