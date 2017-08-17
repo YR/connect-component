@@ -7,7 +7,7 @@ Helper components for generating [@yr/component](https://github.com/YR/component
 
 ```js
 const { connect, Provider, Subscription } = require('@yr/connect-component');
-const { define, el, PropTypes, render } = require('@yr/component');
+const { define, el, render } = require('@yr/component');
 
 const data = { bar: 'bar' };
 const subscription = new Subscription(data);
@@ -25,10 +25,7 @@ const App = connect((data, props) => {
 );
 const AppProvider = Provider.create();
 
-render(
-  el(AppProvider, { data, subscription }, el(App)),
-  root
-);
+render(el(AppProvider, { data, subscription }, el(App)), root);
 //=> <div>bar</div>
 
 data.bar = 'foo';
@@ -42,9 +39,11 @@ subscription.notify();
 `Provider` is a higher-order component used to define the shape and content of the `context` object passed to it's children. By default, it defines both `data` and `subscription`, though additional custom properties can also be defined.
 
 #### `create(contextShape: Object): Class`
-Create component definition with configurable `contextShape`, then pass their implementation as render props:
+Create component definition with `contextShape`, then pass their implementation as render props:
 
 ```js
+const { PropTypes } = require('@yr/component');
+
 const App = define({
   render(props, state, { data, locale }) {
     return el('div', null, `${data.bar} ${locale.foo}`)
@@ -70,22 +69,27 @@ const subscription = new Subscription(data);
 ```
 
 #### `notify()`
-Notify all listeners about potential data changes.
+Notify all container components about potential data changes.
 
-After a `Subscription` instance has been passed to `Provider`, calling `notify()` will cause connected container components to render:
+After a `Subscription` instance has been passed to `Provider`, calling `notify()` will signal to all connected container components that `data` has been updated:
 
 ```js
 data.bar = 'foo';
 subscription.notify();
+
+// Or wire automatically to a complex data object:
+data.onUpdate(() => {
+  subscription.notify();
+});
 ```
 
 ### connect
-The `connect()` factory function allows a component to be wrapped in a container component that can efficiently renders based on potential data changes.
+The `connect()` factory function allows a component to be wrapped in a container component that will efficiently re-render based on data updates.
 
 #### connect(generateProps: (data: Object, props: Object) => Object): (ComponentToWrap) => Class
 Create container component factory that will pass the results of `generateProps` to it's wrapped component.
 
-`generateProps` will be passed the current instance of `data` and any passed `props`:
+`generateProps` will be passed the current instance of `data`, and any passed `props`:
 
 ```js
 const ContainerFactory = connect((data, props) => {
