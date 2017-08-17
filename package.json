@@ -1,17 +1,16 @@
 {
-  "name": "@yr/data-store-component",
-  "description": "Connect components for using yr/data-store with yr/component",
-  "version": "1.0.0",
+  "name": "@yr/connect-component",
+  "description": "Helper components for generating @yr/component containers that can efficiently respond to data updates",
+  "version": "1.0.0-beta.1",
   "author": "Alexander Pope <alexander.pope@nrk.no>",
   "dependencies": {
     "@yr/component": "6.1.0-beta.3",
     "@yr/is-equal": "1.0.x",
-    "debug": "2.3.x",
+    "@yr/runtime": "2.0.x",
     "object-assign": "4.1.x"
   },
   "devDependencies": {
     "@yr/data-store": "*",
-    "@yr/runtime": "2.0.x",
     "babel-plugin-syntax-trailing-function-commas": "6.22.0",
     "babel-plugin-transform-async-generator-functions": "6.24.1",
     "babel-plugin-transform-async-to-generator": "6.24.1",
