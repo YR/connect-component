@@ -14,7 +14,7 @@ module.exports = function connect(generateProps) {
   /**
    * Wrap 'ComponentToWrap' with connect component
    * @param {Class|Function} ComponentToWrap
-   * @returns {Function}
+   * @returns {Class}
    */
   return function wrapWithConnect(ComponentToWrap) {
     return define({

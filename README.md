@@ -1,41 +1,110 @@
-[![NPM Version](https://img.shields.io/npm/v/@yr/data-store-component.svg?style=flat)](https://npmjs.org/package/@yr/data-store-component)
-[![Build Status](https://img.shields.io/travis/YR/data-store-component.svg?style=flat)](https://travis-ci.org/YR/data-store-component?branch=master)
+[![NPM Version](https://img.shields.io/npm/v/@yr/connect-component.svg?style=flat)](https://npmjs.org/package/@yr/connect-component)
+[![Build Status](https://img.shields.io/travis/YR/connect-component.svg?style=flat)](https://travis-ci.org/YR/connect-component?branch=master)
 
 Helper components for generating [@yr/component](https://github.com/YR/component) containers that can efficiently respond to data updates.
 
 ## Usage
 
 ```js
-const { connect, Provider, Subscription } = require('@yr/data-store-component');
-const { Component, define, el, PropTypes, render } = require('@yr/component');
-const subscription = new Subscription(data);
-const ChildContainer = connect((data, props) => {
-  return {
-    text: data.get('bar')
-  };
-})(
-  define({
-    render(props, state, context) {
-      expect(data).to.equal(context.data);
-      expect(subscription).to.not.equal(context.subscription);
-      return el('span', null, props.text);
-    }
-  })
-);
-const ParentContainer = connect((data, props) => {
-  return {
-    text: data.get('foo')
-  };
-})(
-  define({
-    render(props, state, context) {
-      return el('div', null, el('span', null, props.text), el(ChildContainer));
-    }
-  })
-);
+const { connect, Provider, Subscription } = require('@yr/connect-component');
+const { define, el, PropTypes, render } = require('@yr/component');
 
+const data = { bar: 'bar' };
+const subscription = new Subscription(data);
+const root = document.getElementById('root');
+const App = connect((data, props) => {
+  return {
+    text: data.bar
+  };
+})(
+  define({
+    render(props, state, context) {
+      return el('div', null, props.text);
+    }
+  })
+);
+const AppProvider = Provider.create();
+
+render(
+  el(AppProvider, { data, subscription }, el(App)),
+  root
+);
+//=> <div>bar</div>
+
+data.bar = 'foo';
+subscription.notify();
+//=> <div>foo</div>
 ```
 
 ## API
 
-#### `create (id: String, data: Object, options: Object): DataStore|FetchableDataStore`
+### Provider
+`Provider` is a higher-order component used to define the shape and content of the `context` object passed to it's children. By default, it defines both `data` and `subscription`, though additional custom properties can also be defined.
+
+#### `create(contextShape: Object): Class`
+Create component definition with configurable `contextShape`, then pass their implementation as render props:
+
+```js
+const App = define({
+  render(props, state, { data, locale }) {
+    return el('div', null, `${data.bar} ${locale.foo}`)
+  }
+});
+const AppProvider = Provider.create({ locale: PropTypes.object });
+const locale = {
+  foo: 'le foo'
+};
+
+render(el(AppProvider, { data, locale }, el(App)), root);
+//=> <div>bar le foo</div>
+```
+
+### Subscription
+Instances of `Subscription` are simple event dispatchers used to notify container components about potential data changes.
+
+#### `constructor(data: Object): Subscription`
+Instantiate instance with a reference to a `data` object:
+
+```js
+const subscription = new Subscription(data);
+```
+
+#### `notify()`
+Notify all listeners about potential data changes.
+
+After a `Subscription` instance has been passed to `Provider`, calling `notify()` will cause connected container components to render:
+
+```js
+data.bar = 'foo';
+subscription.notify();
+```
+
+### connect
+The `connect()` factory function allows a component to be wrapped in a container component that can efficiently renders based on potential data changes.
+
+#### connect(generateProps: (data: Object, props: Object) => Object): (ComponentToWrap) => Class
+Create container component factory that will pass the results of `generateProps` to it's wrapped component.
+
+`generateProps` will be passed the current instance of `data` and any passed `props`:
+
+```js
+const ContainerFactory = connect((data, props) => {
+  return {
+    foo: data[props.id]
+  };
+});
+```
+
+Invoking the factory with a component definition (`ComponentToWrap`) will return a new container component definition:
+
+```js
+const Container = ContainerFactory(
+  define({
+    render(props, state, context) {
+      return el('div', null, props.foo);
+    }
+  })
+);
+```
+
+Instances of this container are responsible for controlling whether `ComponentToWrap` should render based on the results of invoking `generateProps`. If the props returned by `generateProps` have not changed since the last update, `ComponentToWrap` will not be re-rendered.
