@@ -2,6 +2,7 @@
 
 const { Component, define, PropTypes } = require('@yr/component');
 const assign = require('object-assign');
+const runtime = require('@yr/runtime');
 const Subscription = require('./Subscription');
 
 const DEFAULT_CONTEXT_SHAPE = {
@@ -25,6 +26,11 @@ module.exports = {
       displayName: 'DataStoreProvider',
       propTypes: shape,
 
+      /**
+       * Retrieve context.
+       * Adds 'subscription' if not already passed
+       * @returns {Object}
+       */
       getChildContext() {
         const context = {};
 
@@ -33,16 +39,18 @@ module.exports = {
         }
 
         if (context.subscription === undefined) {
-          context.subscription = new Subscription(context.data);
+          // Subscription has no purpose for server rendering
+          context.subscription = runtime.isBrowser ? new Subscription(context.data) : {};
         }
 
         return context;
       },
 
-      componentWillUnmount() {
-        // TODO: destroy subscription?
-      },
-
+      /**
+       * Render passed child
+       * @param {Object} props
+       * @returns {Object}
+       */
       render(props) {
         return Array.isArray(props.children) ? props.children[0] : props.children;
       }

@@ -499,6 +499,31 @@ $m['type-detect#3.0.0'].exports.typeDetect = $m['type-detect#3.0.0'].exports;
 /*≠≠ node_modules/deep-eql/node_modules/type-detect/index.js ≠≠*/
 
 
+/*== node_modules/chai/lib/chai/utils/getActual.js ==*/
+$m['chai/lib/chai/utils/getActual'] = { exports: {} };
+/*!
+ * Chai - getActual utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .getActual(object, [actual])
+ *
+ * Returns the `actual` value for an Assertion.
+ *
+ * @param {Object} object (constructed Assertion)
+ * @param {Arguments} chai.Assertion.prototype.assert arguments
+ * @namespace Utils
+ * @name getActual
+ */
+
+$m['chai/lib/chai/utils/getActual'].exports = function getActual(obj, args) {
+  return args.length > 4 ? args[4] : obj._obj;
+};
+/*≠≠ node_modules/chai/lib/chai/utils/getActual.js ≠≠*/
+
+
 /*== node_modules/get-func-name/index.js ==*/
 $m['get-func-name'] = { exports: {} };
 
@@ -576,445 +601,6 @@ $m['chai/lib/chai/utils/getEnumerableProperties'].exports = function getEnumerab
   return result;
 };
 /*≠≠ node_modules/chai/lib/chai/utils/getEnumerableProperties.js ≠≠*/
-
-
-/*== node_modules/chai/lib/chai/utils/getActual.js ==*/
-$m['chai/lib/chai/utils/getActual'] = { exports: {} };
-/*!
- * Chai - getActual utility
- * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
- * MIT Licensed
- */
-
-/**
- * ### .getActual(object, [actual])
- *
- * Returns the `actual` value for an Assertion.
- *
- * @param {Object} object (constructed Assertion)
- * @param {Arguments} chai.Assertion.prototype.assert arguments
- * @namespace Utils
- * @name getActual
- */
-
-$m['chai/lib/chai/utils/getActual'].exports = function getActual(obj, args) {
-  return args.length > 4 ? args[4] : obj._obj;
-};
-/*≠≠ node_modules/chai/lib/chai/utils/getActual.js ≠≠*/
-
-
-/*== node_modules/chai/lib/chai/uti...wnEnumerablePropertySymbols.js ==*/
-$m['chai/lib/chai/utils/getOwnEnumerablePropertySymbols'] = { exports: {} };
-/*!
- * Chai - getOwnEnumerablePropertySymbols utility
- * Copyright(c) 2011-2016 Jake Luer <jake@alogicalparadox.com>
- * MIT Licensed
- */
-
-/**
- * ### .getOwnEnumerablePropertySymbols(object)
- *
- * This allows the retrieval of directly-owned enumerable property symbols of an
- * object. This function is necessary because Object.getOwnPropertySymbols
- * returns both enumerable and non-enumerable property symbols.
- *
- * @param {Object} object
- * @returns {Array}
- * @namespace Utils
- * @name getOwnEnumerablePropertySymbols
- * @api public
- */
-
-$m['chai/lib/chai/utils/getOwnEnumerablePropertySymbols'].exports = function getOwnEnumerablePropertySymbols(obj) {
-  if (typeof Object.getOwnPropertySymbols !== 'function') return [];
-
-  return Object.getOwnPropertySymbols(obj).filter(function (sym) {
-    return Object.getOwnPropertyDescriptor(obj, sym).enumerable;
-  });
-};
-/*≠≠ node_modules/chai/lib/chai/uti...wnEnumerablePropertySymbols.js ≠≠*/
-
-
-/*== node_modules/object-assign/index.js ==*/
-$m['object-assign'] = { exports: {} };
-/*
-object-assign
-(c) Sindre Sorhus
-@license MIT
-*/
-
-/* eslint-disable no-unused-vars */
-var objectassign__getOwnPropertySymbols = Object.getOwnPropertySymbols;
-var objectassign__hasOwnProperty = Object.prototype.hasOwnProperty;
-var objectassign__propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-function objectassign__toObject(val) {
-	if (val === null || val === undefined) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
-
-	return Object(val);
-}
-
-function objectassign__shouldUseNative() {
-	try {
-		if (!Object.assign) {
-			return false;
-		}
-
-		// Detect buggy property enumeration order in older V8 versions.
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-		var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
-		test1[5] = 'de';
-		if (Object.getOwnPropertyNames(test1)[0] === '5') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test2 = {};
-		for (var i = 0; i < 10; i++) {
-			test2['_' + String.fromCharCode(i)] = i;
-		}
-		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-			return test2[n];
-		});
-		if (order2.join('') !== '0123456789') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test3 = {};
-		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-			test3[letter] = letter;
-		});
-		if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
-			return false;
-		}
-
-		return true;
-	} catch (err) {
-		// We don't expect any of the above to throw, but better to be safe.
-		return false;
-	}
-}
-
-$m['object-assign'].exports = objectassign__shouldUseNative() ? Object.assign : function (target, source) {
-	var from;
-	var to = objectassign__toObject(target);
-	var symbols;
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = Object(arguments[s]);
-
-		for (var key in from) {
-			if (objectassign__hasOwnProperty.call(from, key)) {
-				to[key] = from[key];
-			}
-		}
-
-		if (objectassign__getOwnPropertySymbols) {
-			symbols = objectassign__getOwnPropertySymbols(from);
-			for (var i = 0; i < symbols.length; i++) {
-				if (objectassign__propIsEnumerable.call(from, symbols[i])) {
-					to[symbols[i]] = from[symbols[i]];
-				}
-			}
-		}
-	}
-
-	return to;
-};
-/*≠≠ node_modules/object-assign/index.js ≠≠*/
-
-
-/*== node_modules/superagent/lib/should-retry.js ==*/
-$m['superagent/lib/should-retry'] = { exports: {} };
-var superagentlibshouldretry__ERROR_CODES = ['ECONNRESET', 'ETIMEDOUT', 'EADDRINFO', 'ESOCKETTIMEDOUT'];
-
-/**
- * Determine if a request should be retried.
- * (Borrowed from segmentio/superagent-retry)
- *
- * @param {Error} err
- * @param {Response} [res]
- * @returns {Boolean}
- */
-$m['superagent/lib/should-retry'].exports = function shouldRetry(err, res) {
-  if (err && err.code && ~superagentlibshouldretry__ERROR_CODES.indexOf(err.code)) return true;
-  if (res && res.status && res.status >= 500) return true;
-  // Superagent timeout
-  if (err && 'timeout' in err && err.code == 'ECONNABORTED') return true;
-  if (err && 'crossDomain' in err) return true;
-  return false;
-};
-/*≠≠ node_modules/superagent/lib/should-retry.js ≠≠*/
-
-
-/*== node_modules/superagent/lib/utils.js ==*/
-$m['superagent/lib/utils'] = { exports: {} };
-
-/**
- * Return the mime type for the given `str`.
- *
- * @param {String} str
- * @return {String}
- * @api private
- */
-
-$m['superagent/lib/utils'].exports.type = function (str) {
-  return str.split(/ *; */).shift();
-};
-
-/**
- * Return header field parameters.
- *
- * @param {String} str
- * @return {Object}
- * @api private
- */
-
-$m['superagent/lib/utils'].exports.params = function (str) {
-  return str.split(/ *; */).reduce(function (obj, str) {
-    var parts = str.split(/ *= */);
-    var key = parts.shift();
-    var val = parts.shift();
-
-    if (key && val) obj[key] = val;
-    return obj;
-  }, {});
-};
-
-/**
- * Parse Link header fields.
- *
- * @param {String} str
- * @return {Object}
- * @api private
- */
-
-$m['superagent/lib/utils'].exports.parseLinks = function (str) {
-  return str.split(/ *, */).reduce(function (obj, str) {
-    var parts = str.split(/ *; */);
-    var url = parts[0].slice(1, -1);
-    var rel = parts[1].split(/ *= */)[1].slice(1, -1);
-    obj[rel] = url;
-    return obj;
-  }, {});
-};
-
-/**
- * Strip content related fields from `header`.
- *
- * @param {Object} header
- * @return {Object} header
- * @api private
- */
-
-$m['superagent/lib/utils'].exports.cleanHeader = function (header, shouldStripCookie) {
-  delete header['content-type'];
-  delete header['content-length'];
-  delete header['transfer-encoding'];
-  delete header['host'];
-  if (shouldStripCookie) {
-    delete header['cookie'];
-  }
-  return header;
-};
-/*≠≠ node_modules/superagent/lib/utils.js ≠≠*/
-
-
-/*== node_modules/check-error/index.js ==*/
-$m['check-error'] = { exports: {} };
-
-/* !
- * Chai - checkError utility
- * Copyright(c) 2012-2016 Jake Luer <jake@alogicalparadox.com>
- * MIT Licensed
- */
-
-/**
- * ### .checkError
- *
- * Checks that an error conforms to a given set of criteria and/or retrieves information about it.
- *
- * @api public
- */
-
-/**
- * ### .compatibleInstance(thrown, errorLike)
- *
- * Checks if two instances are compatible (strict equal).
- * Returns false if errorLike is not an instance of Error, because instances
- * can only be compatible if they're both error instances.
- *
- * @name compatibleInstance
- * @param {Error} thrown error
- * @param {Error|ErrorConstructor} errorLike object to compare against
- * @namespace Utils
- * @api public
- */
-
-function checkerror__compatibleInstance(thrown, errorLike) {
-  return errorLike instanceof Error && thrown === errorLike;
-}
-
-/**
- * ### .compatibleConstructor(thrown, errorLike)
- *
- * Checks if two constructors are compatible.
- * This function can receive either an error constructor or
- * an error instance as the `errorLike` argument.
- * Constructors are compatible if they're the same or if one is
- * an instance of another.
- *
- * @name compatibleConstructor
- * @param {Error} thrown error
- * @param {Error|ErrorConstructor} errorLike object to compare against
- * @namespace Utils
- * @api public
- */
-
-function checkerror__compatibleConstructor(thrown, errorLike) {
-  if (errorLike instanceof Error) {
-    // If `errorLike` is an instance of any error we compare their constructors
-    return thrown.constructor === errorLike.constructor || thrown instanceof errorLike.constructor;
-  } else if (errorLike.prototype instanceof Error || errorLike === Error) {
-    // If `errorLike` is a constructor that inherits from Error, we compare `thrown` to `errorLike` directly
-    return thrown.constructor === errorLike || thrown instanceof errorLike;
-  }
-
-  return false;
-}
-
-/**
- * ### .compatibleMessage(thrown, errMatcher)
- *
- * Checks if an error's message is compatible with a matcher (String or RegExp).
- * If the message contains the String or passes the RegExp test,
- * it is considered compatible.
- *
- * @name compatibleMessage
- * @param {Error} thrown error
- * @param {String|RegExp} errMatcher to look for into the message
- * @namespace Utils
- * @api public
- */
-
-function checkerror__compatibleMessage(thrown, errMatcher) {
-  var comparisonString = typeof thrown === 'string' ? thrown : thrown.message;
-  if (errMatcher instanceof RegExp) {
-    return errMatcher.test(comparisonString);
-  } else if (typeof errMatcher === 'string') {
-    return comparisonString.indexOf(errMatcher) !== -1; // eslint-disable-line no-magic-numbers
-  }
-
-  return false;
-}
-
-/**
- * ### .getFunctionName(constructorFn)
- *
- * Returns the name of a function.
- * This also includes a polyfill function if `constructorFn.name` is not defined.
- *
- * @name getFunctionName
- * @param {Function} constructorFn
- * @namespace Utils
- * @api private
- */
-
-var checkerror__functionNameMatch = /\s*function(?:\s|\s*\/\*[^(?:*\/)]+\*\/\s*)*([^\(\/]+)/;
-function checkerror__getFunctionName(constructorFn) {
-  var name = '';
-  if (typeof constructorFn.name === 'undefined') {
-    // Here we run a polyfill if constructorFn.name is not defined
-    var match = String(constructorFn).match(checkerror__functionNameMatch);
-    if (match) {
-      name = match[1];
-    }
-  } else {
-    name = constructorFn.name;
-  }
-
-  return name;
-}
-
-/**
- * ### .getConstructorName(errorLike)
- *
- * Gets the constructor name for an Error instance or constructor itself.
- *
- * @name getConstructorName
- * @param {Error|ErrorConstructor} errorLike
- * @namespace Utils
- * @api public
- */
-
-function checkerror__getConstructorName(errorLike) {
-  var constructorName = errorLike;
-  if (errorLike instanceof Error) {
-    constructorName = checkerror__getFunctionName(errorLike.constructor);
-  } else if (typeof errorLike === 'function') {
-    // If `err` is not an instance of Error it is an error constructor itself or another function.
-    // If we've got a common function we get its name, otherwise we may need to create a new instance
-    // of the error just in case it's a poorly-constructed error. Please see chaijs/chai/issues/45 to know more.
-    constructorName = checkerror__getFunctionName(errorLike).trim() || checkerror__getFunctionName(new errorLike()); // eslint-disable-line new-cap
-  }
-
-  return constructorName;
-}
-
-/**
- * ### .getMessage(errorLike)
- *
- * Gets the error message from an error.
- * If `err` is a String itself, we return it.
- * If the error has no message, we return an empty string.
- *
- * @name getMessage
- * @param {Error|String} errorLike
- * @namespace Utils
- * @api public
- */
-
-function checkerror__getMessage(errorLike) {
-  var msg = '';
-  if (errorLike && errorLike.message) {
-    msg = errorLike.message;
-  } else if (typeof errorLike === 'string') {
-    msg = errorLike;
-  }
-
-  return msg;
-}
-
-$m['check-error'].exports = {
-  compatibleInstance: checkerror__compatibleInstance,
-  compatibleConstructor: checkerror__compatibleConstructor,
-  compatibleMessage: checkerror__compatibleMessage,
-  getMessage: checkerror__getMessage,
-  getConstructorName: checkerror__getConstructorName
-};
-/*≠≠ node_modules/check-error/index.js ≠≠*/
-
-
-/*== node_modules/superagent/lib/is-object.js ==*/
-$m['superagent/lib/is-object'] = { exports: {} };
-/**
- * Check if `obj` is an object.
- *
- * @param {Object} obj
- * @return {Boolean}
- * @api private
- */
-
-function superagentlibisobject__isObject(obj) {
-  return null !== obj && 'object' === typeof obj;
-}
-
-$m['superagent/lib/is-object'].exports = superagentlibisobject__isObject;
-/*≠≠ node_modules/superagent/lib/is-object.js ≠≠*/
 
 
 /*== node_modules/type-detect/index.js ==*/
@@ -1384,42 +970,539 @@ $m['type-detect'].exports.typeDetect = $m['type-detect'].exports;
 /*≠≠ node_modules/type-detect/index.js ≠≠*/
 
 
-/*== node_modules/chai/lib/chai/utils/flag.js ==*/
-$m['chai/lib/chai/utils/flag'] = { exports: {} };
+/*== node_modules/object-assign/index.js ==*/
+$m['object-assign'] = { exports: {} };
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+/* eslint-disable no-unused-vars */
+var objectassign__getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var objectassign__hasOwnProperty = Object.prototype.hasOwnProperty;
+var objectassign__propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function objectassign__toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function objectassign__shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+$m['object-assign'].exports = objectassign__shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = objectassign__toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (objectassign__hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (objectassign__getOwnPropertySymbols) {
+			symbols = objectassign__getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (objectassign__propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+/*≠≠ node_modules/object-assign/index.js ≠≠*/
+
+
+/*== node_modules/superagent/lib/should-retry.js ==*/
+$m['superagent/lib/should-retry'] = { exports: {} };
+var superagentlibshouldretry__ERROR_CODES = ['ECONNRESET', 'ETIMEDOUT', 'EADDRINFO', 'ESOCKETTIMEDOUT'];
+
+/**
+ * Determine if a request should be retried.
+ * (Borrowed from segmentio/superagent-retry)
+ *
+ * @param {Error} err
+ * @param {Response} [res]
+ * @returns {Boolean}
+ */
+$m['superagent/lib/should-retry'].exports = function shouldRetry(err, res) {
+  if (err && err.code && ~superagentlibshouldretry__ERROR_CODES.indexOf(err.code)) return true;
+  if (res && res.status && res.status >= 500) return true;
+  // Superagent timeout
+  if (err && 'timeout' in err && err.code == 'ECONNABORTED') return true;
+  if (err && 'crossDomain' in err) return true;
+  return false;
+};
+/*≠≠ node_modules/superagent/lib/should-retry.js ≠≠*/
+
+
+/*== node_modules/superagent/lib/utils.js ==*/
+$m['superagent/lib/utils'] = { exports: {} };
+
+/**
+ * Return the mime type for the given `str`.
+ *
+ * @param {String} str
+ * @return {String}
+ * @api private
+ */
+
+$m['superagent/lib/utils'].exports.type = function (str) {
+  return str.split(/ *; */).shift();
+};
+
+/**
+ * Return header field parameters.
+ *
+ * @param {String} str
+ * @return {Object}
+ * @api private
+ */
+
+$m['superagent/lib/utils'].exports.params = function (str) {
+  return str.split(/ *; */).reduce(function (obj, str) {
+    var parts = str.split(/ *= */);
+    var key = parts.shift();
+    var val = parts.shift();
+
+    if (key && val) obj[key] = val;
+    return obj;
+  }, {});
+};
+
+/**
+ * Parse Link header fields.
+ *
+ * @param {String} str
+ * @return {Object}
+ * @api private
+ */
+
+$m['superagent/lib/utils'].exports.parseLinks = function (str) {
+  return str.split(/ *, */).reduce(function (obj, str) {
+    var parts = str.split(/ *; */);
+    var url = parts[0].slice(1, -1);
+    var rel = parts[1].split(/ *= */)[1].slice(1, -1);
+    obj[rel] = url;
+    return obj;
+  }, {});
+};
+
+/**
+ * Strip content related fields from `header`.
+ *
+ * @param {Object} header
+ * @return {Object} header
+ * @api private
+ */
+
+$m['superagent/lib/utils'].exports.cleanHeader = function (header, shouldStripCookie) {
+  delete header['content-type'];
+  delete header['content-length'];
+  delete header['transfer-encoding'];
+  delete header['host'];
+  if (shouldStripCookie) {
+    delete header['cookie'];
+  }
+  return header;
+};
+/*≠≠ node_modules/superagent/lib/utils.js ≠≠*/
+
+
+/*== node_modules/chai/lib/chai/uti...wnEnumerablePropertySymbols.js ==*/
+$m['chai/lib/chai/utils/getOwnEnumerablePropertySymbols'] = { exports: {} };
 /*!
- * Chai - flag utility
- * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * Chai - getOwnEnumerablePropertySymbols utility
+ * Copyright(c) 2011-2016 Jake Luer <jake@alogicalparadox.com>
  * MIT Licensed
  */
 
 /**
- * ### .flag(object, key, [value])
+ * ### .getOwnEnumerablePropertySymbols(object)
  *
- * Get or set a flag value on an object. If a
- * value is provided it will be set, else it will
- * return the currently set value or `undefined` if
- * the value is not set.
+ * This allows the retrieval of directly-owned enumerable property symbols of an
+ * object. This function is necessary because Object.getOwnPropertySymbols
+ * returns both enumerable and non-enumerable property symbols.
  *
- *     utils.flag(this, 'foo', 'bar'); // setter
- *     utils.flag(this, 'foo'); // getter, returns `bar`
- *
- * @param {Object} object constructed Assertion
- * @param {String} key
- * @param {Mixed} value (optional)
+ * @param {Object} object
+ * @returns {Array}
  * @namespace Utils
- * @name flag
+ * @name getOwnEnumerablePropertySymbols
+ * @api public
+ */
+
+$m['chai/lib/chai/utils/getOwnEnumerablePropertySymbols'].exports = function getOwnEnumerablePropertySymbols(obj) {
+  if (typeof Object.getOwnPropertySymbols !== 'function') return [];
+
+  return Object.getOwnPropertySymbols(obj).filter(function (sym) {
+    return Object.getOwnPropertyDescriptor(obj, sym).enumerable;
+  });
+};
+/*≠≠ node_modules/chai/lib/chai/uti...wnEnumerablePropertySymbols.js ≠≠*/
+
+
+/*== node_modules/superagent/lib/is-object.js ==*/
+$m['superagent/lib/is-object'] = { exports: {} };
+/**
+ * Check if `obj` is an object.
+ *
+ * @param {Object} obj
+ * @return {Boolean}
  * @api private
  */
 
-$m['chai/lib/chai/utils/flag'].exports = function flag(obj, key, value) {
-  var flags = obj.__flags || (obj.__flags = Object.create(null));
-  if (arguments.length === 3) {
-    flags[key] = value;
-  } else {
-    return flags[key];
+function superagentlibisobject__isObject(obj) {
+  return null !== obj && 'object' === typeof obj;
+}
+
+$m['superagent/lib/is-object'].exports = superagentlibisobject__isObject;
+/*≠≠ node_modules/superagent/lib/is-object.js ≠≠*/
+
+
+/*== node_modules/check-error/index.js ==*/
+$m['check-error'] = { exports: {} };
+
+/* !
+ * Chai - checkError utility
+ * Copyright(c) 2012-2016 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .checkError
+ *
+ * Checks that an error conforms to a given set of criteria and/or retrieves information about it.
+ *
+ * @api public
+ */
+
+/**
+ * ### .compatibleInstance(thrown, errorLike)
+ *
+ * Checks if two instances are compatible (strict equal).
+ * Returns false if errorLike is not an instance of Error, because instances
+ * can only be compatible if they're both error instances.
+ *
+ * @name compatibleInstance
+ * @param {Error} thrown error
+ * @param {Error|ErrorConstructor} errorLike object to compare against
+ * @namespace Utils
+ * @api public
+ */
+
+function checkerror__compatibleInstance(thrown, errorLike) {
+  return errorLike instanceof Error && thrown === errorLike;
+}
+
+/**
+ * ### .compatibleConstructor(thrown, errorLike)
+ *
+ * Checks if two constructors are compatible.
+ * This function can receive either an error constructor or
+ * an error instance as the `errorLike` argument.
+ * Constructors are compatible if they're the same or if one is
+ * an instance of another.
+ *
+ * @name compatibleConstructor
+ * @param {Error} thrown error
+ * @param {Error|ErrorConstructor} errorLike object to compare against
+ * @namespace Utils
+ * @api public
+ */
+
+function checkerror__compatibleConstructor(thrown, errorLike) {
+  if (errorLike instanceof Error) {
+    // If `errorLike` is an instance of any error we compare their constructors
+    return thrown.constructor === errorLike.constructor || thrown instanceof errorLike.constructor;
+  } else if (errorLike.prototype instanceof Error || errorLike === Error) {
+    // If `errorLike` is a constructor that inherits from Error, we compare `thrown` to `errorLike` directly
+    return thrown.constructor === errorLike || thrown instanceof errorLike;
   }
+
+  return false;
+}
+
+/**
+ * ### .compatibleMessage(thrown, errMatcher)
+ *
+ * Checks if an error's message is compatible with a matcher (String or RegExp).
+ * If the message contains the String or passes the RegExp test,
+ * it is considered compatible.
+ *
+ * @name compatibleMessage
+ * @param {Error} thrown error
+ * @param {String|RegExp} errMatcher to look for into the message
+ * @namespace Utils
+ * @api public
+ */
+
+function checkerror__compatibleMessage(thrown, errMatcher) {
+  var comparisonString = typeof thrown === 'string' ? thrown : thrown.message;
+  if (errMatcher instanceof RegExp) {
+    return errMatcher.test(comparisonString);
+  } else if (typeof errMatcher === 'string') {
+    return comparisonString.indexOf(errMatcher) !== -1; // eslint-disable-line no-magic-numbers
+  }
+
+  return false;
+}
+
+/**
+ * ### .getFunctionName(constructorFn)
+ *
+ * Returns the name of a function.
+ * This also includes a polyfill function if `constructorFn.name` is not defined.
+ *
+ * @name getFunctionName
+ * @param {Function} constructorFn
+ * @namespace Utils
+ * @api private
+ */
+
+var checkerror__functionNameMatch = /\s*function(?:\s|\s*\/\*[^(?:*\/)]+\*\/\s*)*([^\(\/]+)/;
+function checkerror__getFunctionName(constructorFn) {
+  var name = '';
+  if (typeof constructorFn.name === 'undefined') {
+    // Here we run a polyfill if constructorFn.name is not defined
+    var match = String(constructorFn).match(checkerror__functionNameMatch);
+    if (match) {
+      name = match[1];
+    }
+  } else {
+    name = constructorFn.name;
+  }
+
+  return name;
+}
+
+/**
+ * ### .getConstructorName(errorLike)
+ *
+ * Gets the constructor name for an Error instance or constructor itself.
+ *
+ * @name getConstructorName
+ * @param {Error|ErrorConstructor} errorLike
+ * @namespace Utils
+ * @api public
+ */
+
+function checkerror__getConstructorName(errorLike) {
+  var constructorName = errorLike;
+  if (errorLike instanceof Error) {
+    constructorName = checkerror__getFunctionName(errorLike.constructor);
+  } else if (typeof errorLike === 'function') {
+    // If `err` is not an instance of Error it is an error constructor itself or another function.
+    // If we've got a common function we get its name, otherwise we may need to create a new instance
+    // of the error just in case it's a poorly-constructed error. Please see chaijs/chai/issues/45 to know more.
+    constructorName = checkerror__getFunctionName(errorLike).trim() || checkerror__getFunctionName(new errorLike()); // eslint-disable-line new-cap
+  }
+
+  return constructorName;
+}
+
+/**
+ * ### .getMessage(errorLike)
+ *
+ * Gets the error message from an error.
+ * If `err` is a String itself, we return it.
+ * If the error has no message, we return an empty string.
+ *
+ * @name getMessage
+ * @param {Error|String} errorLike
+ * @namespace Utils
+ * @api public
+ */
+
+function checkerror__getMessage(errorLike) {
+  var msg = '';
+  if (errorLike && errorLike.message) {
+    msg = errorLike.message;
+  } else if (typeof errorLike === 'string') {
+    msg = errorLike;
+  }
+
+  return msg;
+}
+
+$m['check-error'].exports = {
+  compatibleInstance: checkerror__compatibleInstance,
+  compatibleConstructor: checkerror__compatibleConstructor,
+  compatibleMessage: checkerror__compatibleMessage,
+  getMessage: checkerror__getMessage,
+  getConstructorName: checkerror__getConstructorName
 };
-/*≠≠ node_modules/chai/lib/chai/utils/flag.js ≠≠*/
+/*≠≠ node_modules/check-error/index.js ≠≠*/
+
+
+/*== node_modules/assertion-error/index.js ==*/
+$m['assertion-error'] = { exports: {} };
+/*!
+ * assertion-error
+ * Copyright(c) 2013 Jake Luer <jake@qualiancy.com>
+ * MIT Licensed
+ */
+
+/*!
+ * Return a function that will copy properties from
+ * one object to another excluding any originally
+ * listed. Returned function will create a new `{}`.
+ *
+ * @param {String} excluded properties ...
+ * @return {Function}
+ */
+
+function assertionerror__exclude() {
+  var excludes = [].slice.call(arguments);
+
+  function excludeProps(res, obj) {
+    Object.keys(obj).forEach(function (key) {
+      if (!~excludes.indexOf(key)) res[key] = obj[key];
+    });
+  }
+
+  return function extendExclude() {
+    var args = [].slice.call(arguments),
+        i = 0,
+        res = {};
+
+    for (; i < args.length; i++) {
+      excludeProps(res, args[i]);
+    }
+
+    return res;
+  };
+};
+
+/*!
+ * Primary Exports
+ */
+
+$m['assertion-error'].exports = assertionerror__AssertionError;
+
+/**
+ * ### AssertionError
+ *
+ * An extension of the JavaScript `Error` constructor for
+ * assertion and validation scenarios.
+ *
+ * @param {String} message
+ * @param {Object} properties to include (optional)
+ * @param {callee} start stack function (optional)
+ */
+
+function assertionerror__AssertionError(message, _props, ssf) {
+  var extend = assertionerror__exclude('name', 'message', 'stack', 'constructor', 'toJSON'),
+      props = extend(_props || {});
+
+  // default values
+  this.message = message || 'Unspecified AssertionError';
+  this.showDiff = false;
+
+  // copy from properties
+  for (var key in props) {
+    this[key] = props[key];
+  }
+
+  // capture stack trace
+  ssf = ssf || arguments.callee;
+  if (ssf && Error.captureStackTrace) {
+    Error.captureStackTrace(this, ssf);
+  } else {
+    try {
+      throw new Error();
+    } catch (e) {
+      this.stack = e.stack;
+    }
+  }
+}
+
+/*!
+ * Inherit from Error.prototype
+ */
+
+assertionerror__AssertionError.prototype = Object.create(Error.prototype);
+
+/*!
+ * Statically set name
+ */
+
+assertionerror__AssertionError.prototype.name = 'AssertionError';
+
+/*!
+ * Ensure correct constructor
+ */
+
+assertionerror__AssertionError.prototype.constructor = assertionerror__AssertionError;
+
+/**
+ * Allow errors to be converted to JSON for static transfer.
+ *
+ * @param {Boolean} include stack (default: `true`)
+ * @return {Object} object that can be `JSON.stringify`
+ */
+
+assertionerror__AssertionError.prototype.toJSON = function (stack) {
+  var extend = assertionerror__exclude('constructor', 'toJSON', 'stack'),
+      props = extend({ name: this.name }, this);
+
+  // include stack if exists and not turned off
+  if (false !== stack && this.stack) {
+    props.stack = this.stack;
+  }
+
+  return props;
+};
+/*≠≠ node_modules/assertion-error/index.js ≠≠*/
 
 
 /*== node_modules/component-emitter/index.js ==*/
@@ -1585,6 +1668,44 @@ componentemitter__Emitter.prototype.hasListeners = function (event) {
 /*≠≠ node_modules/component-emitter/index.js ≠≠*/
 
 
+/*== node_modules/chai/lib/chai/utils/flag.js ==*/
+$m['chai/lib/chai/utils/flag'] = { exports: {} };
+/*!
+ * Chai - flag utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .flag(object, key, [value])
+ *
+ * Get or set a flag value on an object. If a
+ * value is provided it will be set, else it will
+ * return the currently set value or `undefined` if
+ * the value is not set.
+ *
+ *     utils.flag(this, 'foo', 'bar'); // setter
+ *     utils.flag(this, 'foo'); // getter, returns `bar`
+ *
+ * @param {Object} object constructed Assertion
+ * @param {String} key
+ * @param {Mixed} value (optional)
+ * @namespace Utils
+ * @name flag
+ * @api private
+ */
+
+$m['chai/lib/chai/utils/flag'].exports = function flag(obj, key, value) {
+  var flags = obj.__flags || (obj.__flags = Object.create(null));
+  if (arguments.length === 3) {
+    flags[key] = value;
+  } else {
+    return flags[key];
+  }
+};
+/*≠≠ node_modules/chai/lib/chai/utils/flag.js ≠≠*/
+
+
 /*== node_modules/chai/lib/chai/utils/getProperties.js ==*/
 $m['chai/lib/chai/utils/getProperties'] = { exports: {} };
 /*!
@@ -1624,127 +1745,6 @@ $m['chai/lib/chai/utils/getProperties'].exports = function getProperties(object)
   return result;
 };
 /*≠≠ node_modules/chai/lib/chai/utils/getProperties.js ≠≠*/
-
-
-/*== node_modules/assertion-error/index.js ==*/
-$m['assertion-error'] = { exports: {} };
-/*!
- * assertion-error
- * Copyright(c) 2013 Jake Luer <jake@qualiancy.com>
- * MIT Licensed
- */
-
-/*!
- * Return a function that will copy properties from
- * one object to another excluding any originally
- * listed. Returned function will create a new `{}`.
- *
- * @param {String} excluded properties ...
- * @return {Function}
- */
-
-function assertionerror__exclude() {
-  var excludes = [].slice.call(arguments);
-
-  function excludeProps(res, obj) {
-    Object.keys(obj).forEach(function (key) {
-      if (!~excludes.indexOf(key)) res[key] = obj[key];
-    });
-  }
-
-  return function extendExclude() {
-    var args = [].slice.call(arguments),
-        i = 0,
-        res = {};
-
-    for (; i < args.length; i++) {
-      excludeProps(res, args[i]);
-    }
-
-    return res;
-  };
-};
-
-/*!
- * Primary Exports
- */
-
-$m['assertion-error'].exports = assertionerror__AssertionError;
-
-/**
- * ### AssertionError
- *
- * An extension of the JavaScript `Error` constructor for
- * assertion and validation scenarios.
- *
- * @param {String} message
- * @param {Object} properties to include (optional)
- * @param {callee} start stack function (optional)
- */
-
-function assertionerror__AssertionError(message, _props, ssf) {
-  var extend = assertionerror__exclude('name', 'message', 'stack', 'constructor', 'toJSON'),
-      props = extend(_props || {});
-
-  // default values
-  this.message = message || 'Unspecified AssertionError';
-  this.showDiff = false;
-
-  // copy from properties
-  for (var key in props) {
-    this[key] = props[key];
-  }
-
-  // capture stack trace
-  ssf = ssf || arguments.callee;
-  if (ssf && Error.captureStackTrace) {
-    Error.captureStackTrace(this, ssf);
-  } else {
-    try {
-      throw new Error();
-    } catch (e) {
-      this.stack = e.stack;
-    }
-  }
-}
-
-/*!
- * Inherit from Error.prototype
- */
-
-assertionerror__AssertionError.prototype = Object.create(Error.prototype);
-
-/*!
- * Statically set name
- */
-
-assertionerror__AssertionError.prototype.name = 'AssertionError';
-
-/*!
- * Ensure correct constructor
- */
-
-assertionerror__AssertionError.prototype.constructor = assertionerror__AssertionError;
-
-/**
- * Allow errors to be converted to JSON for static transfer.
- *
- * @param {Boolean} include stack (default: `true`)
- * @return {Object} object that can be `JSON.stringify`
- */
-
-assertionerror__AssertionError.prototype.toJSON = function (stack) {
-  var extend = assertionerror__exclude('constructor', 'toJSON', 'stack'),
-      props = extend({ name: this.name }, this);
-
-  // include stack if exists and not turned off
-  if (false !== stack && this.stack) {
-    props.stack = this.stack;
-  }
-
-  return props;
-};
-/*≠≠ node_modules/assertion-error/index.js ≠≠*/
 
 
 /*== node_modules/pathval/index.js ==*/
@@ -2042,6 +2042,48 @@ $m['pathval'].exports = {
 /*≠≠ node_modules/pathval/index.js ≠≠*/
 
 
+/*== lib/Subscription.js ==*/
+$m['lib/Subscription'] = { exports: {} };
+
+$m['lib/Subscription'].exports = function () {
+  function Subscription(data) {
+    babelHelpers.classCallCheck(this, Subscription);
+
+    this.data = data;
+    this.listeners = [];
+  }
+
+  Subscription.prototype.subscribe = function subscribe(listener) {
+    var listeners = this.listeners;
+
+    listeners.push(listener);
+    return function unsubscribe() {
+      var idx = listeners.indexOf(listener);
+
+      if (idx > -1) {
+        listeners.splice(idx, 1);
+      }
+    };
+  };
+
+  Subscription.prototype.notify = function notify() {
+    var listeners = this.listeners.slice();
+
+    for (var i = 0; i < listeners.length; i++) {
+      listeners[i](this.data);
+    }
+  };
+
+  Subscription.prototype.destroy = function destroy() {
+    this.data = null;
+    this.listeners = [];
+  };
+
+  return Subscription;
+}();
+/*≠≠ lib/Subscription.js ≠≠*/
+
+
 /*== node_modules/chai/lib/chai/utils/isNaN.js ==*/
 $m['chai/lib/chai/utils/isNaN'] = { exports: {} };
 /*!
@@ -2071,37 +2113,6 @@ function chailibchaiutilsisNaN__isNaN(value) {
 // If ECMAScript 6's Number.isNaN is present, prefer that.
 $m['chai/lib/chai/utils/isNaN'].exports = Number.isNaN || chailibchaiutilsisNaN__isNaN;
 /*≠≠ node_modules/chai/lib/chai/utils/isNaN.js ≠≠*/
-
-
-/*== lib/Subscription.js ==*/
-$m['lib/Subscription'] = { exports: {} };
-
-$m['lib/Subscription'].exports = function () {
-  function Subscription(data) {
-    babelHelpers.classCallCheck(this, Subscription);
-
-    this.data = data;
-    this.listeners = [];
-  }
-
-  Subscription.prototype.subscribe = function subscribe(listener) {
-    this.listeners.push(listener);
-    return function unsubscribe() {
-      this.listeners.splice(this.listeners.indexOf(listener), 1);
-    };
-  };
-
-  Subscription.prototype.notify = function notify() {
-    var listeners = this.listeners.slice();
-
-    for (var i = 0; i < listeners.length; i++) {
-      listeners[i](this.data);
-    }
-  };
-
-  return Subscription;
-}();
-/*≠≠ lib/Subscription.js ≠≠*/
 
 
 /*== node_modules/ms/index.js ==*/
@@ -2252,6 +2263,120 @@ function ms__plural(ms, n, name) {
 /*≠≠ node_modules/ms/index.js ≠≠*/
 
 
+/*== node_modules/@yr/is-equal/index.js ==*/
+$m['@yr/is-equal'] = { exports: {} };
+/**
+ * Determine whether two objects are conceptually equal
+ * https://github.com/yr/is-equal
+ * @copyright Yr
+ * @license MIT
+ */
+
+/**
+ * Determine if 'obj1' and 'obj2' are conceptually equal,
+ * optionally ignoring properties in 'ignore'
+ * @param {Object} obj1
+ * @param {Object} obj2
+ * @param {Array} [ignore]
+ * @param {Debug} [debug]
+ * @returns {Boolean}
+ */
+
+$m['@yr/is-equal'].exports = function isEqual(obj1, obj2, ignore, debug) {
+  ignore = ignore || [];
+
+  if (yrisequal__equal(obj1, obj2)) return true;
+
+  if (yrisequal__isObject(obj1) && yrisequal__isObject(obj2)) {
+    var keys1 = yrisequal__keys(obj1, ignore);
+    var keys2 = yrisequal__keys(obj2, ignore);
+
+    if (keys1.length != keys2.length) return false;
+
+    for (var i = 0, n = keys1.length; i < n; i++) {
+      var prop = keys1[i];
+      var val1 = obj1[prop];
+      var val2 = obj2[prop];
+
+      if (!yrisequal__equal(val1, val2)) {
+        if (debug) debug('"%s" not equal %s:%s', prop, val1, val2);
+        return false;
+      }
+    }
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Determine if 'val1' and 'val2' are equal
+ * @param {Object} val1
+ * @param {Object} val2
+ * @returns {Boolean}
+ */
+function yrisequal__equal(val1, val2) {
+  var type1 = typeof val1;
+  var type2 = typeof val2;
+
+  // Convert NaN to null
+  if (type1 == 'number' && isNaN(val1)) val1 = null;
+  if (type2 == 'number' && isNaN(val2)) val2 = null;
+
+  return val1 === val2 ||
+  // Handle null & undefined
+  val1 == null && val2 == null || yrisequal__isEqualArray(val1, val2);
+}
+
+/**
+ * Determine if 'obj' is an object
+ * @param {Object} obj
+ * @returns {Boolean}
+ */
+function yrisequal__isObject(obj) {
+  var type = typeof obj;
+
+  return 'object' == type && 'function' != type && !Array.isArray(obj);
+}
+
+/**
+ * Retrieve non-ignored keys of 'obj'
+ * @param {Object} obj
+ * @param {Array} ignore
+ * @returns {Array}
+ */
+function yrisequal__keys(obj, ignore) {
+  return Object.keys(obj).filter(function (key) {
+    // Ignore functions
+    return 'function' != typeof obj[key] && !~ignore.indexOf(key);
+  });
+}
+
+/**
+ * Determine if arrays 'arr1' and 'arr2' are equal
+ * @param {Array} arr1
+ * @param {Array} arr2
+ * @returns {Boolean}
+ */
+function yrisequal__isEqualArray(arr1, arr2) {
+  if (Array.isArray(arr1) && Array.isArray(arr2)) {
+    var n1 = arr1.length;
+    var n2 = arr2.length;
+
+    if (n1 != n2) return false;
+    // Equal if both empty
+    if (n1 == 0 && n2 == 0) return true;
+
+    // Not equal if items not strictly equal
+    for (var i = 0; i < n1; i++) {
+      if (arr1[i] !== arr2[i]) return false;
+    }
+    return true;
+  }
+  return false;
+}
+/*≠≠ node_modules/@yr/is-equal/index.js ≠≠*/
+
+
 /*== node_modules/chai/lib/chai/config.js ==*/
 $m['chai/lib/chai/config'] = { exports: {} };
 $m['chai/lib/chai/config'].exports = {
@@ -2349,6 +2474,190 @@ $m['chai/lib/chai/config'].exports = {
   proxyExcludedKeys: ['then', 'inspect', 'toJSON']
 };
 /*≠≠ node_modules/chai/lib/chai/config.js ≠≠*/
+
+
+/*== node_modules/@yr/keys/index.js ==*/
+$m['@yr/keys'] = { exports: {} };
+
+/**
+ * String/keys utilities
+ * https://github.com/yr/keys
+ * @copyright Yr
+ * @license MIT
+ */
+
+$m['@yr/keys'].exports = {
+  separator: '/',
+  slice: yrkeys__slice,
+  first: yrkeys__first,
+  last: yrkeys__last,
+  length: yrkeys__length,
+  join: yrkeys__join,
+  merge: yrkeys__merge,
+  escape: yrkeys__escape,
+  unescape: yrkeys__unescape
+};
+
+/**
+ * Retrieve segments of 'key' based on slice indexes 'begin' and 'end'
+ * @param {String} key
+ * @param {Number} begin
+ * @param {Number} [end]
+ * @returns {String}
+ */
+function yrkeys__slice(key, begin, end) {
+  if (!key || 'string' != typeof key) return key;
+
+  var separator = $m['@yr/keys'].exports.separator;
+  var leading = '';
+
+  if (key.charAt(0) == separator) {
+    key = key.slice(1);
+    // Store if slicing from beginning
+    leading = begin == 0 ? separator : '';
+  }
+
+  var segs = key.split(separator);
+
+  return leading + segs.slice(begin, end).join(separator);
+}
+
+/**
+ * Retrieve first segment of 'key'
+ * @param {String} key
+ * @returns {String}
+ */
+function yrkeys__first(key) {
+  return yrkeys__slice(key, 0, 1);
+}
+
+/**
+ * Retrieve last segment of 'key'
+ * @param {String} key
+ * @returns {String}
+ */
+function yrkeys__last(key) {
+  return yrkeys__slice(key, -1);
+}
+
+/**
+ * Retrieve number of key segments
+ * @param {String} key
+ * @returns {Number}
+ */
+function yrkeys__length(key) {
+  if ('string' != typeof key) return 0;
+
+  var separator = $m['@yr/keys'].exports.separator;
+
+  // Trim leading '/'
+  if (key.charAt(0) == separator) key = key.slice(1);
+
+  if (!key) return 0;
+
+  return key.split(separator).length;
+}
+
+/**
+ * Join '...keys' with separator
+ * @returns {String}
+ */
+function yrkeys__join() {
+  var separator = $m['@yr/keys'].exports.separator;
+
+  for (var _len = arguments.length, keys = Array(_len), _key = 0; _key < _len; _key++) {
+    keys[_key] = arguments[_key];
+  }
+
+  var key = keys[0];
+
+  for (var i = 1, n = keys.length; i < n; i++) {
+    var k = keys[i];
+
+    if (k !== null && k !== undefined && k !== '' && k !== separator) {
+      // Handle numbers
+      k = String(k);
+      // Add leading slash for subsequent keys
+      if (key.charAt(key.length - 1) !== separator && key !== '' && k.charAt(0) !== separator) {
+        key += separator;
+      }
+      key += k;
+    }
+  }
+
+  return key;
+}
+
+/**
+ * Merge '...keys' with separator
+ * taking care of overlaps
+ * @returns {String}
+ */
+function yrkeys__merge() {
+  var separator = $m['@yr/keys'].exports.separator;
+  var keySegments = [];
+  var k = void 0,
+      idx = void 0,
+      len = void 0,
+      segs = void 0;
+
+  for (var _len2 = arguments.length, keys = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    keys[_key2] = arguments[_key2];
+  }
+
+  for (var i = 0, n = keys.length; i < n; i++) {
+    if (k = keys[i]) {
+      len = keySegments.length;
+
+      // Strip leading '/'
+      if (k.charAt(0) == separator) {
+        k = k.slice(1);
+        // Store if first key
+        if (!len) {
+          keySegments.push(separator);
+          len++;
+        }
+      }
+
+      segs = k.split(separator);
+      idx = len ? segs.indexOf(keySegments[len - 1]) : -1;
+      // No overlap
+      if (!len || idx > len || idx == -1) {
+        keySegments = keySegments.concat(segs);
+        // Overlap
+      } else {
+        for (var j = idx; j >= 0; j--) {
+          // No match
+          if (segs[j] != keySegments[len - 1 - (idx - j)]) break;
+          // Matched up to beginning, so slice
+          if (j == 0) segs = segs.slice(idx + 1);
+        }
+        keySegments = keySegments.concat(segs);
+      }
+    }
+  }
+
+  return yrkeys__join.apply(undefined, keySegments);
+}
+
+/**
+ * Escape 'key' segment separators
+ * @param {String} key
+ * @returns {String}
+ */
+function yrkeys__escape(key) {
+  return key.replace(/\//g, '___');
+}
+
+/**
+ * Unescape escaped 'key' segment separators
+ * @param {String} key
+ * @returns {String}
+ */
+function yrkeys__unescape(key) {
+  return key.replace(/___/g, $m['@yr/keys'].exports.separator);
+}
+/*≠≠ node_modules/@yr/keys/index.js ≠≠*/
 
 
 /*== node_modules/chai/lib/chai/core/assertions.js ==*/
@@ -5795,190 +6104,6 @@ $m['chai/lib/chai/core/assertions'].exports = function (chai, _) {
 /*≠≠ node_modules/chai/lib/chai/core/assertions.js ≠≠*/
 
 
-/*== node_modules/@yr/keys/index.js ==*/
-$m['@yr/keys'] = { exports: {} };
-
-/**
- * String/keys utilities
- * https://github.com/yr/keys
- * @copyright Yr
- * @license MIT
- */
-
-$m['@yr/keys'].exports = {
-  separator: '/',
-  slice: yrkeys__slice,
-  first: yrkeys__first,
-  last: yrkeys__last,
-  length: yrkeys__length,
-  join: yrkeys__join,
-  merge: yrkeys__merge,
-  escape: yrkeys__escape,
-  unescape: yrkeys__unescape
-};
-
-/**
- * Retrieve segments of 'key' based on slice indexes 'begin' and 'end'
- * @param {String} key
- * @param {Number} begin
- * @param {Number} [end]
- * @returns {String}
- */
-function yrkeys__slice(key, begin, end) {
-  if (!key || 'string' != typeof key) return key;
-
-  var separator = $m['@yr/keys'].exports.separator;
-  var leading = '';
-
-  if (key.charAt(0) == separator) {
-    key = key.slice(1);
-    // Store if slicing from beginning
-    leading = begin == 0 ? separator : '';
-  }
-
-  var segs = key.split(separator);
-
-  return leading + segs.slice(begin, end).join(separator);
-}
-
-/**
- * Retrieve first segment of 'key'
- * @param {String} key
- * @returns {String}
- */
-function yrkeys__first(key) {
-  return yrkeys__slice(key, 0, 1);
-}
-
-/**
- * Retrieve last segment of 'key'
- * @param {String} key
- * @returns {String}
- */
-function yrkeys__last(key) {
-  return yrkeys__slice(key, -1);
-}
-
-/**
- * Retrieve number of key segments
- * @param {String} key
- * @returns {Number}
- */
-function yrkeys__length(key) {
-  if ('string' != typeof key) return 0;
-
-  var separator = $m['@yr/keys'].exports.separator;
-
-  // Trim leading '/'
-  if (key.charAt(0) == separator) key = key.slice(1);
-
-  if (!key) return 0;
-
-  return key.split(separator).length;
-}
-
-/**
- * Join '...keys' with separator
- * @returns {String}
- */
-function yrkeys__join() {
-  var separator = $m['@yr/keys'].exports.separator;
-
-  for (var _len = arguments.length, keys = Array(_len), _key = 0; _key < _len; _key++) {
-    keys[_key] = arguments[_key];
-  }
-
-  var key = keys[0];
-
-  for (var i = 1, n = keys.length; i < n; i++) {
-    var k = keys[i];
-
-    if (k !== null && k !== undefined && k !== '' && k !== separator) {
-      // Handle numbers
-      k = String(k);
-      // Add leading slash for subsequent keys
-      if (key.charAt(key.length - 1) !== separator && key !== '' && k.charAt(0) !== separator) {
-        key += separator;
-      }
-      key += k;
-    }
-  }
-
-  return key;
-}
-
-/**
- * Merge '...keys' with separator
- * taking care of overlaps
- * @returns {String}
- */
-function yrkeys__merge() {
-  var separator = $m['@yr/keys'].exports.separator;
-  var keySegments = [];
-  var k = void 0,
-      idx = void 0,
-      len = void 0,
-      segs = void 0;
-
-  for (var _len2 = arguments.length, keys = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    keys[_key2] = arguments[_key2];
-  }
-
-  for (var i = 0, n = keys.length; i < n; i++) {
-    if (k = keys[i]) {
-      len = keySegments.length;
-
-      // Strip leading '/'
-      if (k.charAt(0) == separator) {
-        k = k.slice(1);
-        // Store if first key
-        if (!len) {
-          keySegments.push(separator);
-          len++;
-        }
-      }
-
-      segs = k.split(separator);
-      idx = len ? segs.indexOf(keySegments[len - 1]) : -1;
-      // No overlap
-      if (!len || idx > len || idx == -1) {
-        keySegments = keySegments.concat(segs);
-        // Overlap
-      } else {
-        for (var j = idx; j >= 0; j--) {
-          // No match
-          if (segs[j] != keySegments[len - 1 - (idx - j)]) break;
-          // Matched up to beginning, so slice
-          if (j == 0) segs = segs.slice(idx + 1);
-        }
-        keySegments = keySegments.concat(segs);
-      }
-    }
-  }
-
-  return yrkeys__join.apply(undefined, keySegments);
-}
-
-/**
- * Escape 'key' segment separators
- * @param {String} key
- * @returns {String}
- */
-function yrkeys__escape(key) {
-  return key.replace(/\//g, '___');
-}
-
-/**
- * Unescape escaped 'key' segment separators
- * @param {String} key
- * @returns {String}
- */
-function yrkeys__unescape(key) {
-  return key.replace(/___/g, $m['@yr/keys'].exports.separator);
-}
-/*≠≠ node_modules/@yr/keys/index.js ≠≠*/
-
-
 /*== node_modules/chai/lib/chai/interface/expect.js ==*/
 $m['chai/lib/chai/interface/expect'] = { exports: {} };
 /*!
@@ -9227,22 +9352,6 @@ $m['chai/lib/chai/interface/assert'].exports = function (chai, util) {
 /*≠≠ node_modules/chai/lib/chai/interface/assert.js ≠≠*/
 
 
-/*== node_modules/deep-freeze/index.js ==*/
-$m['deep-freeze'] = { exports: {} };
-$m['deep-freeze'].exports = function deepFreeze(o) {
-  Object.freeze(o);
-
-  Object.getOwnPropertyNames(o).forEach(function (prop) {
-    if (o.hasOwnProperty(prop) && o[prop] !== null && (typeof o[prop] === "object" || typeof o[prop] === "function") && !Object.isFrozen(o[prop])) {
-      deepFreeze(o[prop]);
-    }
-  });
-
-  return o;
-};
-/*≠≠ node_modules/deep-freeze/index.js ≠≠*/
-
-
 /*== node_modules/prop-types/lib/ReactPropTypesSecret.js ==*/
 $m['prop-types/lib/ReactPropTypesSecret'] = { exports: {} };
 /**
@@ -9359,6 +9468,22 @@ fbjslibemptyFunction__emptyFunction.thatReturnsArgument = function (arg) {
 
 $m['fbjs/lib/emptyFunction'].exports = fbjslibemptyFunction__emptyFunction;
 /*≠≠ node_modules/fbjs/lib/emptyFunction.js ≠≠*/
+
+
+/*== node_modules/deep-freeze/index.js ==*/
+$m['deep-freeze'] = { exports: {} };
+$m['deep-freeze'].exports = function deepFreeze(o) {
+  Object.freeze(o);
+
+  Object.getOwnPropertyNames(o).forEach(function (prop) {
+    if (o.hasOwnProperty(prop) && o[prop] !== null && (typeof o[prop] === "object" || typeof o[prop] === "function") && !Object.isFrozen(o[prop])) {
+      deepFreeze(o[prop]);
+    }
+  });
+
+  return o;
+};
+/*≠≠ node_modules/deep-freeze/index.js ≠≠*/
 
 
 /*== node_modules/is-plain-obj/index.js ==*/
@@ -17863,6 +17988,7 @@ var libProvider___require = $m['@yr/component'].exports,
     libProvider__PropTypes = libProvider___require.PropTypes;
 
 var libProvider__assign = $m['object-assign'].exports;
+var libProvider__runtime = $m['@yr/runtime'].exports;
 var libProvider__Subscription = $m['lib/Subscription'].exports;
 
 var libProvider__DEFAULT_CONTEXT_SHAPE = {
@@ -17896,13 +18022,11 @@ $m['lib/Provider'].exports = {
         }
 
         if (context.subscription === undefined) {
-          context.subscription = new libProvider__Subscription(context.data);
+          // Subscription has no purpose for server rendering
+          context.subscription = libProvider__runtime.isBrowser ? new libProvider__Subscription(context.data) : {};
         }
 
         return context;
-      },
-      componentWillUnmount: function componentWillUnmount() {
-        // TODO: destroy subscription?
       },
       render: function render(props) {
         return Array.isArray(props.children) ? props.children[0] : props.children;
@@ -17920,24 +18044,37 @@ var libconnect___require = $m['@yr/component'].exports,
     libconnect__define = libconnect___require.define,
     libconnect__el = libconnect___require.el;
 
+var libconnect__isEqual = $m['@yr/is-equal'].exports;
+var libconnect__runtime = $m['@yr/runtime'].exports;
+var libconnect__Subscription = $m['lib/Subscription'].exports;
+
 $m['lib/connect'].exports = function connect(generateProps) {
   return function wrapWithConnect(ComponentToWrap) {
     return libconnect__define({
       displayName: 'DataStoreConnector',
 
       init: function init(props, context) {
-        this.data = context.data;
+        var data = context.data,
+            subscription = context.subscription;
+
+        this.data = data;
         this.state = {
-          props: generateProps(this.data, props)
+          props: generateProps(data, props)
         };
+        if (libconnect__runtime.isBrowser && subscription != null) {
+          this.unsubscribe = subscription.subscribe(this.onNotify);
+          this.subscription = new libconnect__Subscription(data);
+        }
       },
       onNotify: function onNotify(data) {
         this.setState({
           props: generateProps(data, this.props)
         });
       },
-      componentDidMount: function componentDidMount() {
-        this.unsubscribe = this.context.subscription.subscribe(this.onNotify);
+      getChildContext: function getChildContext() {
+        return {
+          subscription: this.subscription
+        };
       },
 
       // Handle render from parent (not called during mounting)
@@ -17946,12 +18083,22 @@ $m['lib/connect'].exports = function connect(generateProps) {
           props: generateProps(nextContext.data, nextProps)
         });
       },
-      shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-        return this.state !== nextState;
+      shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState, nextContext) {
+        var shouldUpdate = !libconnect__isEqual(this.state.props, nextState.props);
+
+        // No render, so notify connected children manually
+        if (!shouldUpdate) {
+          this.subscription.notify();
+        }
+
+        return shouldUpdate;
       },
       componentWillUnmount: function componentWillUnmount() {
         if (this.unsubscribe !== undefined) {
           this.unsubscribe();
+        }
+        if (this.subscription !== undefined) {
+          this.subscription.destroy();
         }
       },
       render: function render(props, state, context) {
@@ -17968,7 +18115,8 @@ $m['@yr/data-store-component'] = { exports: {} };
 
 $m['@yr/data-store-component'].exports = {
   connect: $m['lib/connect'].exports,
-  Provider: $m['lib/Provider'].exports
+  Provider: $m['lib/Provider'].exports,
+  Subscription: $m['lib/Subscription'].exports
 };
 /*≠≠ index.js ≠≠*/
 
@@ -17976,7 +18124,7 @@ $m['@yr/data-store-component'].exports = {
 /*== test/src/test-browser.js ==*/
 $m['test/src/test-browser'] = { exports: {} };
 
-const { connect, Provider } = $m['@yr/data-store-component'].exports;
+const { connect, Provider, Subscription } = $m['@yr/data-store-component'].exports;
 const { expect } = $m['chai'].exports;
 const { Component, define, el, PropTypes, render } = $m['@yr/component'].exports;
 const testsrctestbrowser__dataStore = $m['@yr/data-store'].exports;
@@ -18035,6 +18183,161 @@ describe('data-store-component', () => {
       render(el(Provider.create({ locale: PropTypes.object }), { data: testsrctestbrowser__data, locale: { foo: 'le foo' } }, el(app)), testsrctestbrowser__root);
       expect(testsrctestbrowser__root.innerHTML).to.equal('<div>le foo</div>');
       expect(Component.contextTypes).to.have.property('locale');
+    });
+  });
+
+  describe('connect()', () => {
+    it('should render a connected component on init', () => {
+      const Container = connect((data, props) => {})(define({
+        render(props, state, context) {
+          return el('div');
+        }
+      }));
+
+      render(el(Provider.create(), { data: testsrctestbrowser__data }, el(Container)), testsrctestbrowser__root);
+      expect(testsrctestbrowser__root.innerHTML).to.equal('<div></div>');
+    });
+    it('should render a connected component on init with selected props', () => {
+      const Container = connect((data, props) => {
+        return {
+          text: `${props.text}ly`
+        };
+      })(define({
+        render(props, state, context) {
+          return el('div', null, props.text);
+        }
+      }));
+
+      render(el(Provider.create(), { data: testsrctestbrowser__data }, el(Container, { text: 'foo' })), testsrctestbrowser__root);
+      expect(testsrctestbrowser__root.innerHTML).to.equal('<div>fooly</div>');
+    });
+    it('should render a connected component on init with selected data props', () => {
+      const Container = connect((data, props) => {
+        return {
+          text: data.get('foo')
+        };
+      })(define({
+        render(props, state, context) {
+          return el('div', null, props.text);
+        }
+      }));
+
+      render(el(Provider.create(), { data: testsrctestbrowser__data }, el(Container)), testsrctestbrowser__root);
+      expect(testsrctestbrowser__root.innerHTML).to.equal('<div>foo</div>');
+    });
+    it('should rerender a connected component on updated data', done => {
+      const Container = connect((data, props) => {
+        return {
+          text: data.get('foo'),
+          onSubmit() {
+            data.trigger('foo');
+          }
+        };
+      })(define({
+        render(props, state, context) {
+          return el('div', null, props.text);
+        }
+      }));
+      const subscription = new Subscription(testsrctestbrowser__data);
+
+      render(el(Provider.create(), { data: testsrctestbrowser__data, subscription }, el(Container)), testsrctestbrowser__root);
+      expect(testsrctestbrowser__root.innerHTML).to.equal('<div>foo</div>');
+      testsrctestbrowser__data.set('foo', 'bar');
+      subscription.notify();
+      setTimeout(() => {
+        expect(testsrctestbrowser__root.innerHTML).to.equal('<div>bar</div>');
+        done();
+      }, 10);
+    });
+    it('should rerender a tree of connected components on updated data', done => {
+      const ChildContainer = connect((data, props) => {
+        return {
+          text: data.get('bar')
+        };
+      })(define({
+        render(props, state, context) {
+          return el('span', null, props.text);
+        }
+      }));
+      const ParentContainer = connect((data, props) => {
+        return {
+          text: data.get('foo')
+        };
+      })(define({
+        render(props, state, context) {
+          return el('div', null, el('span', null, props.text), el(ChildContainer));
+        }
+      }));
+      const subscription = new Subscription(testsrctestbrowser__data);
+      const oldComponentWillReceiveProps = ChildContainer.prototype.componentWillReceiveProps;
+      const oldOnNotify = ChildContainer.prototype.onNotify;
+      const called = [];
+
+      ChildContainer.prototype.componentWillReceiveProps = function (nextProps, nextContext) {
+        called.push('componentWillReceiveProps');
+        oldComponentWillReceiveProps.call(this, nextProps, nextContext);
+      };
+      ChildContainer.prototype.onNotify = function (data) {
+        called.push('onNotify');
+        oldOnNotify.call(this, data);
+      };
+
+      testsrctestbrowser__data.set('bar', 'bar');
+      render(el(Provider.create(), { data: testsrctestbrowser__data, subscription }, el(ParentContainer)), testsrctestbrowser__root);
+      expect(testsrctestbrowser__root.innerHTML).to.equal('<div><span>foo</span><span>bar</span></div>');
+      testsrctestbrowser__data.setAll({ foo: 'bar', bar: 'foo' });
+      subscription.notify();
+      setTimeout(() => {
+        expect(testsrctestbrowser__root.innerHTML).to.equal('<div><span>bar</span><span>foo</span></div>');
+        expect(called).to.eql(['componentWillReceiveProps']);
+        done();
+      }, 10);
+    });
+    it('should rerender a nested subtree of connected components on updated data', done => {
+      const subscription = new Subscription(testsrctestbrowser__data);
+      const ChildContainer = connect((data, props) => {
+        return {
+          text: data.get('bar')
+        };
+      })(define({
+        render(props, state, context) {
+          expect(testsrctestbrowser__data).to.equal(context.data);
+          expect(subscription).to.not.equal(context.subscription);
+          return el('span', null, props.text);
+        }
+      }));
+      const ParentContainer = connect((data, props) => {
+        return {
+          text: data.get('foo')
+        };
+      })(define({
+        render(props, state, context) {
+          return el('div', null, el('span', null, props.text), el(ChildContainer));
+        }
+      }));
+      const oldComponentWillReceiveProps = ChildContainer.prototype.componentWillReceiveProps;
+      const oldOnNotify = ChildContainer.prototype.onNotify;
+      const called = [];
+
+      ChildContainer.prototype.componentWillReceiveProps = function (nextProps, nextContext) {
+        called.push('componentWillReceiveProps');
+        oldComponentWillReceiveProps.call(this, nextProps, nextContext);
+      };
+      ChildContainer.prototype.onNotify = function (data) {
+        called.push('onNotify');
+        oldOnNotify.call(this, data);
+      };
+
+      testsrctestbrowser__data.set('bar', 'bar');
+      render(el(Provider.create(), { data: testsrctestbrowser__data, subscription }, el(ParentContainer)), testsrctestbrowser__root);
+      expect(testsrctestbrowser__root.innerHTML).to.equal('<div><span>foo</span><span>bar</span></div>');
+      testsrctestbrowser__data.set('bar', 'foo');
+      subscription.notify();
+      setTimeout(() => {
+        expect(testsrctestbrowser__root.innerHTML).to.equal('<div><span>foo</span><span>foo</span></div>');
+        expect(called).to.eql(['onNotify']);
+        done();
+      }, 10);
     });
   });
 });
