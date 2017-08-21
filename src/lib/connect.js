@@ -28,9 +28,9 @@ module.exports = function connect(generateProps) {
       init(props, context) {
         const { data, subscription } = context;
 
-        this.data = data;
+        // this.data = data;
         this.state = {
-          props: generateProps(data, props)
+          props: generateProps(context, props)
         };
         if (runtime.isBrowser && subscription != null) {
           this.unsubscribe = subscription.subscribe(this.onNotify);
@@ -44,7 +44,7 @@ module.exports = function connect(generateProps) {
        */
       onNotify(data) {
         this.setState({
-          props: generateProps(data, this.props)
+          props: generateProps(this.context, this.props)
         });
       },
 
@@ -67,7 +67,7 @@ module.exports = function connect(generateProps) {
        */
       componentWillReceiveProps(nextProps, nextContext) {
         this.setState({
-          props: generateProps(nextContext.data, nextProps)
+          props: generateProps(nextContext, nextProps)
         });
       },
 

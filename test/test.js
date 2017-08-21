@@ -64,7 +64,7 @@ describe('data-store-component', () => {
     });
 
     it('should render a connected component on init', () => {
-      const container = connect((data, props) => {})(
+      const container = connect((context, props) => {})(
         define({
           render(props, state, context) {
             return el('div');
@@ -75,7 +75,7 @@ describe('data-store-component', () => {
       expect(render(el(Provider.create(), { data }, el(container)))).to.equal('<div></div>');
     });
     it('should render a connected component on init with selected props', () => {
-      const container = connect((data, props) => {
+      const container = connect((context, props) => {
         return {
           text: `${props.text}ly`
         };
@@ -90,9 +90,9 @@ describe('data-store-component', () => {
       expect(render(el(Provider.create(), { data }, el(container, { text: 'foo' })))).to.equal('<div>fooly</div>');
     });
     it('should render a connected component on init with selected data props', () => {
-      const container = connect((data, props) => {
+      const container = connect((context, props) => {
         return {
-          text: data.get('foo')
+          text: context.data.get('foo')
         };
       })(
         define({

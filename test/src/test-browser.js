@@ -64,7 +64,7 @@ describe('data-store-component', () => {
 
   describe('connect()', () => {
     it('should render a connected component on init', () => {
-      const Container = connect((data, props) => {})(
+      const Container = connect((context, props) => {})(
         define({
           render(props, state, context) {
             return el('div');
@@ -76,7 +76,7 @@ describe('data-store-component', () => {
       expect(root.innerHTML).to.equal('<div></div>');
     });
     it('should render a connected component on init with selected props', () => {
-      const Container = connect((data, props) => {
+      const Container = connect((context, props) => {
         return {
           text: `${props.text}ly`
         };
@@ -92,9 +92,9 @@ describe('data-store-component', () => {
       expect(root.innerHTML).to.equal('<div>fooly</div>');
     });
     it('should render a connected component on init with selected data props', () => {
-      const Container = connect((data, props) => {
+      const Container = connect((context, props) => {
         return {
-          text: data.get('foo')
+          text: context.data.get('foo')
         };
       })(
         define({
@@ -108,11 +108,11 @@ describe('data-store-component', () => {
       expect(root.innerHTML).to.equal('<div>foo</div>');
     });
     it('should rerender a connected component on updated data', done => {
-      const Container = connect((data, props) => {
+      const Container = connect((context, props) => {
         return {
-          text: data.get('foo'),
+          text: context.data.get('foo'),
           onSubmit() {
-            data.trigger('foo');
+            context.data.trigger('foo');
           }
         };
       })(
@@ -134,9 +134,9 @@ describe('data-store-component', () => {
       }, 10);
     });
     it('should rerender a tree of connected components on updated data', done => {
-      const ChildContainer = connect((data, props) => {
+      const ChildContainer = connect((context, props) => {
         return {
-          text: data.get('bar')
+          text: context.data.get('bar')
         };
       })(
         define({
@@ -145,9 +145,9 @@ describe('data-store-component', () => {
           }
         })
       );
-      const ParentContainer = connect((data, props) => {
+      const ParentContainer = connect((context, props) => {
         return {
-          text: data.get('foo')
+          text: context.data.get('foo')
         };
       })(
         define({
@@ -183,9 +183,9 @@ describe('data-store-component', () => {
     });
     it('should rerender a nested subtree of connected components on updated data', done => {
       const subscription = new Subscription(data);
-      const ChildContainer = connect((data, props) => {
+      const ChildContainer = connect((context, props) => {
         return {
-          text: data.get('bar')
+          text: context.data.get('bar')
         };
       })(
         define({
@@ -196,9 +196,9 @@ describe('data-store-component', () => {
           }
         })
       );
-      const ParentContainer = connect((data, props) => {
+      const ParentContainer = connect((context, props) => {
         return {
-          text: data.get('foo')
+          text: context.data.get('foo')
         };
       })(
         define({

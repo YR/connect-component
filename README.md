@@ -12,9 +12,9 @@ const { define, el, render } = require('@yr/component');
 const data = { bar: 'bar' };
 const subscription = new Subscription(data);
 const root = document.getElementById('root');
-const App = connect((data, props) => {
+const App = connect((context, props) => {
   return {
-    text: data.bar
+    text: context.data.bar
   };
 })(
   define({
@@ -86,15 +86,15 @@ data.onUpdate(() => {
 ### connect
 The `connect()` factory function allows a component to be wrapped in a container component that will efficiently re-render based on data updates.
 
-#### connect(generateProps: (data: Object, props: Object) => Object): (ComponentToWrap) => Class
+#### connect(generateProps: (context: Object, props: Object) => Object): (ComponentToWrap) => Class
 Create container component factory that will pass the results of `generateProps` to it's wrapped component.
 
-`generateProps` will be passed the current instance of `data`, and any passed `props`:
+`generateProps` will be passed the current `context`, and any passed `props`:
 
 ```js
-const ContainerFactory = connect((data, props) => {
+const ContainerFactory = connect((context, props) => {
   return {
-    foo: data[props.id]
+    foo: context.data[props.id]
   };
 });
 ```
