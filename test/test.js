@@ -1,6 +1,6 @@
 'use strict';
 
-const { connect, Provider } = require('../src');
+const { connect, Provider, select } = require('../src');
 const { expect } = require('chai');
 const { Component, define, el, PropTypes, render } = require('@yr/component');
 const dataStore = require('@yr/data-store');
@@ -103,6 +103,22 @@ describe('data-store-component', () => {
       );
 
       expect(render(el(Provider.create(), { data }, el(container)))).to.equal('<div>foo</div>');
+    });
+  });
+
+  describe.only('select()', () => {
+    it('should', () => {
+      function fooSelector(context, props) {
+        return context.data.get('foo');
+      }
+
+      const generateProps = select([fooSelector], (foo, props) => {
+        return {
+          text: foo
+        };
+      });
+
+      expect(generateProps({ data })).to.eql({ text: 'foo' });
     });
   });
 });
