@@ -26,7 +26,7 @@ module.exports = function select(inputSelectors, computeResult) {
     const result =
       isCached && !shouldCompute
         ? prevResult
-        : computeResult.apply(computeResult, inputs.concat(props));
+        : computeResult.call(computeResult, inputs, props);
 
     if (runtime.isBrowser) {
       prevInputs = inputs;
