@@ -105,7 +105,7 @@ describe('connect-component', () => {
     });
   });
 
-  describe.only('select()', () => {
+  describe('select()', () => {
     it('should select a single input from data', () => {
       function fooSelector(context, props) {
         return context.data.get('foo');
