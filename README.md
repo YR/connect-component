@@ -6,17 +6,20 @@ Helper components for generating [@yr/component](https://github.com/YR/component
 ## Usage
 
 ```js
-const { connect, Provider, Subscription } = require('@yr/connect-component');
+const { connect, Provider, select, Subscription } = require('@yr/connect-component');
 const { define, el, render } = require('@yr/component');
 
 const data = { bar: 'bar' };
 const subscription = new Subscription(data);
 const root = document.getElementById('root');
-const App = connect((context, props) => {
+const barSelector = (context, props) => {
+  return context.data.bar;
+};
+const App = connect(select([barSelector], (bar, props) => {
   return {
-    text: context.data.bar
+    text: bar
   };
-})(
+}))(
   define({
     render(props, state, context) {
       return el('div', null, props.text);
@@ -112,3 +115,20 @@ const Container = ContainerFactory(
 ```
 
 Instances of this container are responsible for controlling whether `ComponentToWrap` should render based on the results of invoking `generateProps`. If the props returned by `generateProps` have not changed since the last update, `ComponentToWrap` will not be re-rendered.
+
+#### select(inputSelectors: Array<(context, props) => any>, computeResult: (inputs: Array<any>, props: Object) => Object): (context, props) => Object
+Create a `generateProps` function, based on one or more input *selector* functions, that will return cached results if passed the same `props` and if all input selector functions return the same values:
+
+```js
+const userSelector = (context, props) => {
+  return context.data[props.id];
+};
+const generateProps = select([userSelector], ([user], props) => {
+  return {
+    user
+  };
+});
+const results1 = generateProps({ data }, { id: 'foo' });
+const results2 = generateProps({ data }, { id: 'foo' });
+console.log(results1 === results2); //=> true
+```
