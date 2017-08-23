@@ -9,9 +9,12 @@ module.exports = function select(inputSelectors, computeResult) {
 
   return function generateProps(context, props) {
     const inputs = new Array(n);
-    let shouldCompute = !isEqual(props, prevProps);
-    let result;
-    console.log(shouldCompute)
+    const isCached = prevResult !== undefined;
+    let shouldCompute = !isCached;
+
+    if (!isEqual(props, prevProps)) {
+      shouldCompute = true;
+    }
 
     for (let i = 0; i < n; i++) {
       inputs[i] = inputSelectors[i](context, props);
@@ -19,8 +22,11 @@ module.exports = function select(inputSelectors, computeResult) {
         shouldCompute = true;
       }
     }
-    console.log(shouldCompute, inputs)
-    result = prevResult !== undefined && !shouldCompute ? prevResult : computeResult.apply(inputs.concat(props));
+
+    const result =
+      isCached && !shouldCompute
+        ? prevResult
+        : computeResult.apply(computeResult, inputs.concat(props));
 
     if (runtime.isBrowser) {
       prevInputs = inputs;
