@@ -1,7 +1,7 @@
 {
   "name": "@yr/connect-component",
   "description": "Helper components for generating @yr/component containers that can efficiently respond to data updates",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Alexander Pope <alexander.pope@nrk.no>",
   "dependencies": {
     "@yr/component": "6.1.0",
