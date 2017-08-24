@@ -15,7 +15,7 @@ const root = document.getElementById('root');
 const barSelector = (context, props) => {
   return context.data.bar;
 };
-const App = connect(select([barSelector], (bar, props) => {
+const App = connect(select([barSelector], ([bar], context, props) => {
   return {
     text: bar
   };
@@ -116,14 +116,14 @@ const Container = ContainerFactory(
 
 Instances of this container are responsible for controlling whether `ComponentToWrap` should render based on the results of invoking `generateProps`. If the props returned by `generateProps` have not changed since the last update, `ComponentToWrap` will not be re-rendered.
 
-#### select(inputSelectors: Array<(context, props) => any>, computeResult: (inputs: Array<any>, props: Object) => Object): (context, props) => Object
+#### select(inputSelectors: Array<(context, props) => any>, computeResult: (inputs: Array<any>, context: Object, props: Object) => Object): (context, props) => Object
 Create a `generateProps` function, based on one or more input *selector* functions, that will return cached results if passed the same `props` and if all input selector functions return the same values:
 
 ```js
 const userSelector = (context, props) => {
   return context.data[props.id];
 };
-const generateProps = select([userSelector], ([user], props) => {
+const generateProps = select([userSelector], ([user], context, props) => {
   return {
     user
   };

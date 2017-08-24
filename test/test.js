@@ -111,7 +111,7 @@ describe('connect-component', () => {
         return context.data.get('foo');
       }
 
-      const generateProps = select([fooSelector], ([foo], props) => {
+      const generateProps = select([fooSelector], ([foo], context, props) => {
         return {
           text: foo
         };
@@ -127,7 +127,7 @@ describe('connect-component', () => {
         return context.data.get('bar');
       }
 
-      const generateProps = select([fooSelector, barSelector], ([foo, bar], props) => {
+      const generateProps = select([fooSelector, barSelector], ([foo, bar], context, props) => {
         return {
           text: foo,
           label: bar.foo
@@ -151,7 +151,7 @@ describe('connect-component', () => {
           return context.data.get('foo');
         }
 
-        const generateProps = select([fooSelector], ([foo], props) => {
+        const generateProps = select([fooSelector], ([foo], context, props) => {
           return {
             text: foo
           };
@@ -166,7 +166,7 @@ describe('connect-component', () => {
           return context.data.get('foo');
         }
 
-        const generateProps = select([fooSelector], ([foo], props) => {
+        const generateProps = select([fooSelector], ([foo], context, props) => {
           return {
             text: foo
           };
@@ -183,7 +183,7 @@ describe('connect-component', () => {
           return context.data.get('foo');
         }
 
-        const generateProps = select([fooSelector], ([foo], props) => {
+        const generateProps = select([fooSelector], ([foo], context, props) => {
           return {
             text: foo
           };
@@ -198,13 +198,13 @@ describe('connect-component', () => {
           return context.data.get('foo');
         }
 
-        const generateProps = select([fooSelector], ([foo], props) => {
+        const generateProps = select([fooSelector], ([foo], context, { bar }) => {
           return {
-            text: foo
+            text: bar
           };
         });
-        const results = generateProps({ data });
-        const results2 = generateProps({ data }, {});
+        const results = generateProps({ data }, { bar: 'foo' });
+        const results2 = generateProps({ data }, { bar: 'bar' });
 
         expect(results).to.not.equal(results2);
       });

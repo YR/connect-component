@@ -12,7 +12,7 @@ module.exports = function select(inputSelectors, computeResult) {
     const isCached = prevResult !== undefined;
     let shouldCompute = !isCached;
 
-    if (!isEqual(props, prevProps)) {
+    if (prevProps !== undefined && !isEqual(props, prevProps)) {
       shouldCompute = true;
     }
 
@@ -26,7 +26,7 @@ module.exports = function select(inputSelectors, computeResult) {
     const result =
       isCached && !shouldCompute
         ? prevResult
-        : computeResult.call(computeResult, inputs, props);
+        : computeResult.call(computeResult, inputs, context, props);
 
     if (runtime.isBrowser) {
       prevInputs = inputs;
