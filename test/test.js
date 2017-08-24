@@ -1,6 +1,6 @@
 'use strict';
 
-const { connect, Provider } = require('../src');
+const { connect, Provider, select } = require('../src');
 const { expect } = require('chai');
 const { Component, define, el, PropTypes, render } = require('@yr/component');
 const dataStore = require('@yr/data-store');
@@ -8,13 +8,12 @@ const runtime = require('@yr/runtime');
 
 let data;
 
-describe('data-store-component', () => {
+describe('connect-component', () => {
   beforeEach(() => {
     data = dataStore.create('test', {
       foo: 'foo'
     });
   });
-
   afterEach(() => {
     if (data) data.destroy();
   });
@@ -103,6 +102,112 @@ describe('data-store-component', () => {
       );
 
       expect(render(el(Provider.create(), { data }, el(container)))).to.equal('<div>foo</div>');
+    });
+  });
+
+  describe('select()', () => {
+    it('should select a single input from data', () => {
+      function fooSelector(context, props) {
+        return context.data.get('foo');
+      }
+
+      const generateProps = select([fooSelector], ([foo], context, props) => {
+        return {
+          text: foo
+        };
+      });
+
+      expect(generateProps({ data })).to.eql({ text: 'foo' });
+    });
+    it('should select multiple inputs from data', () => {
+      function fooSelector(context, props) {
+        return context.data.get('foo');
+      }
+      function barSelector(context, props) {
+        return context.data.get('bar');
+      }
+
+      const generateProps = select([fooSelector, barSelector], ([foo, bar], context, props) => {
+        return {
+          text: foo,
+          label: bar.foo
+        };
+      });
+
+      data.set('bar', { foo: 'bar' }, { immutable: true });
+      expect(generateProps({ data })).to.eql({ text: 'foo', label: 'bar' });
+    });
+
+    describe('memoization', () => {
+      before(() => {
+        runtime.isBrowser = true;
+      });
+      after(() => {
+        runtime.isBrowser = false;
+      });
+
+      it('should memoize selector results', () => {
+        function fooSelector(context, props) {
+          return context.data.get('foo');
+        }
+
+        const generateProps = select([fooSelector], ([foo], context, props) => {
+          return {
+            text: foo
+          };
+        });
+        const results = generateProps({ data });
+        const results2 = generateProps({ data });
+
+        expect(results).to.equal(results2);
+      });
+      it('should not memoize selector results on new input', () => {
+        function fooSelector(context, props) {
+          return context.data.get('foo');
+        }
+
+        const generateProps = select([fooSelector], ([foo], context, props) => {
+          return {
+            text: foo
+          };
+        });
+        const results = generateProps({ data });
+        data.set('foo', 'bar');
+        const results2 = generateProps({ data });
+
+        expect(results).to.not.equal(results2);
+        expect(results2).to.eql({ text: 'bar' });
+      });
+      it('should memoize selector results on similar props', () => {
+        function fooSelector(context, props) {
+          return context.data.get('foo');
+        }
+
+        const generateProps = select([fooSelector], ([foo], context, props) => {
+          return {
+            text: foo
+          };
+        });
+        const results = generateProps({ data }, {});
+        const results2 = generateProps({ data }, {});
+
+        expect(results).to.equal(results2);
+      });
+      it('should not memoize selector results on new props', () => {
+        function fooSelector(context, props) {
+          return context.data.get('foo');
+        }
+
+        const generateProps = select([fooSelector], ([foo], context, { bar }) => {
+          return {
+            text: bar
+          };
+        });
+        const results = generateProps({ data }, { bar: 'foo' });
+        const results2 = generateProps({ data }, { bar: 'bar' });
+
+        expect(results).to.not.equal(results2);
+      });
     });
   });
 });
