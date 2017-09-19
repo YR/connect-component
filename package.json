@@ -43,7 +43,7 @@
     "mocha": "*"
   },
   "main": "src/index.js",
-  "repository": "https://github.com/YR/data-store-component.git",
+  "repository": "https://github.com/YR/connect-component.git",
   "license": "MIT",
   "scripts": {
     "prepublish": "buddy build",
