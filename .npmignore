@@ -1,6 +1,5 @@
-.DS_Store
-.git*
-test
-docs
-yarn.lock
+/test
+/src
+karma.conf.js
 .travis.yml
+yarn.lock
