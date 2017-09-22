@@ -1,7 +1,6 @@
 'use strict';
 
 const { Component, define, PropTypes } = require('@yr/component');
-const assign = require('object-assign');
 const runtime = require('@yr/runtime');
 const Subscription = require('./Subscription');
 
@@ -18,7 +17,7 @@ module.exports = {
    * @returns {Class}
    */
   create(contextShape = {}) {
-    const shape = assign({}, DEFAULT_CONTEXT_SHAPE, contextShape);
+    const shape = Object.assign({}, DEFAULT_CONTEXT_SHAPE, contextShape);
 
     Component.contextTypes = shape;
 

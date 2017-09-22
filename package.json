@@ -6,8 +6,7 @@
   "dependencies": {
     "@yr/component": "6.1.x",
     "@yr/is-equal": "1.0.x",
-    "@yr/runtime": "2.0.x",
-    "object-assign": "4.1.x"
+    "@yr/runtime": "2.0.x"
   },
   "devDependencies": {
     "@yr/data-store": "*",
