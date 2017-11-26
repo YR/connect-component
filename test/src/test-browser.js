@@ -1,7 +1,7 @@
 'use strict';
 
 const { connect, Provider, Subscription } = require('../../index.js');
-const { expect } = require('chai');
+const { expect } = require('chai/chai.js');
 const { Component, define, el, PropTypes, render } = require('@yr/component');
 const dataStore = require('@yr/data-store');
 
