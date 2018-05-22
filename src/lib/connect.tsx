@@ -1,52 +1,48 @@
-'use strict';
-
-const { define, el } = require('@yr/component');
-const isEqual = require('@yr/is-equal');
-const runtime = require('@yr/runtime');
-const Subscription = require('./Subscription');
+import { isEqual } from '@yr/is-equal';
+import { isBrowser } from '@yr/runtime';
+import { Subscription } from './Subscription';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Factory for wrapping components with connect functionality
  * @param {Function} generateProps
  * @returns {Function}
  */
-module.exports = function connect(generateProps) {
+export function connect(generateProps: (context: any, props: any) => any) {
   /**
    * Wrap 'ComponentToWrap' with connect component
-   * @param {Class|Function} ComponentToWrap
-   * @returns {Class}
+   * @returns {DataStoreConnector}
    */
-  return function wrapWithConnect(ComponentToWrap) {
-    return define({
-      displayName: 'DataStoreConnector',
+  return function wrapWithConnect(ComponentToWrap: any) {
+    return class DataStoreConnector extends React.Component<{}, { props: any }> {
+      unsubscribe: () => void = () => {};
+      subscription?: Subscription;
 
-      /**
-       * Pseudo constructor
-       * @param {Object} props
-       * @param {Object} context
-       */
-      init(props, context) {
+      static childContextTypes = {
+        subscription: PropTypes.object
+      };
+
+      constructor(props: any, context?: any) {
+        super(props, context);
         const { data, subscription } = context;
-
-        // this.data = data;
         this.state = {
           props: generateProps(context, props)
         };
-        if (runtime.isBrowser && subscription != null) {
+        if (isBrowser && subscription != null) {
           this.unsubscribe = subscription.subscribe(this.onNotify);
           this.subscription = new Subscription(data);
         }
-      },
+      }
 
       /**
        * Handle 'data' update notification
-       * @param {Object} data
        */
-      onNotify(data) {
+      onNotify = () => {
         this.setState({
           props: generateProps(this.context, this.props)
         });
-      },
+      };
 
       /**
        * Retrieve context.
@@ -58,37 +54,33 @@ module.exports = function connect(generateProps) {
         return {
           subscription: this.subscription
         };
-      },
+      }
 
       /**
        * Handle render from parent (not called during mounting) during default render flow
        * @param {Object} nextProps
        * @param {Object} nextContext
        */
-      componentWillReceiveProps(nextProps, nextContext) {
+      componentWillReceiveProps(nextProps: any, nextContext: any) {
         this.setState({
           props: generateProps(nextContext, nextProps)
         });
-      },
+      }
 
       /**
        * Determine if component should render based on result of 'generateProps'.
        * If not rendering, manually notifies all connected child containers instead of relying on default render flow
-       * @param {Object} nextProps
-       * @param {Object} nextState
-       * @param {Object} nextContext
-       * @returns {Boolean}
        */
-      shouldComponentUpdate(nextProps, nextState, nextContext) {
+      shouldComponentUpdate(_nextProps: any, nextState: any): boolean {
         const shouldUpdate = !isEqual(this.state.props, nextState.props);
 
         // No render, so notify connected children manually
-        if (!shouldUpdate) {
+        if (!shouldUpdate && this.subscription !== undefined) {
           this.subscription.notify();
         }
 
         return shouldUpdate;
-      },
+      }
 
       /**
        * Clean up on component unmount
@@ -100,18 +92,14 @@ module.exports = function connect(generateProps) {
         if (this.subscription !== undefined) {
           this.subscription.destroy();
         }
-      },
+      }
 
       /**
        * Render wrapped component with result of 'generateProps'
-       * @param {Object} props
-       * @param {Object} state
-       * @param {Object} context
-       * @returns {Object}
        */
-      render(props, state, context) {
-        return el(ComponentToWrap, state.props);
+      render() {
+        return <ComponentToWrap {...this.state.props} />;
       }
-    });
+    };
   };
-};
+}

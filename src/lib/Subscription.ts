@@ -1,17 +1,17 @@
-'use strict';
+export class Subscription {
+  data: any;
+  listeners: Function[];
 
-module.exports = class Subscription {
-  constructor(data) {
+  constructor(data: any) {
     this.data = data;
     this.listeners = [];
   }
 
   /**
    * Subscribe to update notifications
-   * @param {Function} listener
    * @returns {Function}
    */
-  subscribe(listener) {
+  subscribe(listener: Function) {
     const listeners = this.listeners;
 
     listeners.push(listener);
@@ -42,4 +42,4 @@ module.exports = class Subscription {
     this.data = null;
     this.listeners = [];
   }
-};
+}
