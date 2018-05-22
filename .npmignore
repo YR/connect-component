@@ -1,3 +1,7 @@
-src/
 .travis.yml
+lib/
+npm-debug.log
+src/
+test/
+yarn-error.log
 yarn.lock
