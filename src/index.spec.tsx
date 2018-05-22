@@ -1,9 +1,10 @@
 import 'mocha';
 import { connect, createProvider, select } from './index';
 import { expect } from 'chai';
-import * as PropTypes from 'prop-types';
-import React from 'react';
 import { renderToStaticMarkup as render } from 'react-dom/server';
+import * as PropTypes from 'prop-types';
+import decache from 'decache';
+import React from 'react';
 // @ts-ignore
 import dataStore from '@yr/data-store';
 
@@ -80,7 +81,7 @@ describe('connect-component', () => {
 
   describe('connect()', () => {
     it('should render a connected component on init', () => {
-      const container = connect(() => {})(() => <div />);
+      const container = connect(() => { })(() => <div />);
 
       expect(render(React.createElement(createProvider(), { data }, React.createElement(container)))).to.equal(
         '<div></div>'
@@ -146,14 +147,28 @@ describe('connect-component', () => {
       expect(generateProps({ data })).to.eql({ text: 'foo', label: 'bar' });
     });
 
-    // Can't change const in @yr/runtime, so the test is skipped
-    describe.skip('memoization', () => {
+    describe('memoization', () => {
+      let mockedSelectInBrowser = undefined;
+      let window = undefined;
+
       before(() => {
-        // runtime.isBrowser = true;
+        // Store the original window, if any
+        // @ts-ignore
+        window = global.window;
+
+        // Set `window` to an empty object.
+        // This is enough to make @yr/runtime belive it is running in a browser.
+        // @ts-ignore
+        global.window = {};
+
+        decache('./index');
+        mockedSelectInBrowser = require('./index').select;
       });
 
       after(() => {
-        // runtime.isBrowser = false;
+        // Restore the original window, if any
+        // @ts-ignore
+        global.window = window;
       });
 
       it('should memoize selector results', () => {
@@ -161,7 +176,7 @@ describe('connect-component', () => {
           return context.data.get('foo');
         }
 
-        const generateProps = select([fooSelector], ([foo]) => {
+        const generateProps = mockedSelectInBrowser([fooSelector], ([foo]) => {
           return {
             text: foo
           };
@@ -178,7 +193,7 @@ describe('connect-component', () => {
           return context.data.get('foo');
         }
 
-        const generateProps = select([fooSelector], ([foo]) => {
+        const generateProps = mockedSelectInBrowser([fooSelector], ([foo]) => {
           return {
             text: foo
           };
@@ -197,7 +212,7 @@ describe('connect-component', () => {
           return context.data.get('foo');
         }
 
-        const generateProps = select([fooSelector], ([foo]) => {
+        const generateProps = mockedSelectInBrowser([fooSelector], ([foo]) => {
           return {
             text: foo
           };
@@ -214,7 +229,7 @@ describe('connect-component', () => {
           return context.data.get('foo');
         }
 
-        const generateProps = select([fooSelector], (_res, _context, { bar }) => {
+        const generateProps = mockedSelectInBrowser([fooSelector], (_res, _context, { bar }) => {
           return {
             text: bar
           };
