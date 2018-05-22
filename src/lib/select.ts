@@ -1,13 +1,13 @@
-'use strict';
+import { isEqual } from '@yr/is-equal';
+import { isBrowser } from '@yr/runtime';
 
-const isEqual = require('@yr/is-equal');
-const runtime = require('@yr/runtime');
+export type ComputeResultFunction = (selectors: any[], context?: any, props?: any) => any;
 
-module.exports = function select(inputSelectors, computeResult) {
+export function select(inputSelectors: Function[], computeResult: ComputeResultFunction) {
   const n = inputSelectors.length;
-  let prevInputs, prevProps, prevResult;
+  let prevInputs: any, prevProps: any, prevResult: any;
 
-  return function generateProps(context, props) {
+  return function generateProps(context: any, props?: any) {
     const inputs = new Array(n);
     const isCached = prevResult !== undefined;
     let shouldCompute = !isCached;
@@ -23,12 +23,9 @@ module.exports = function select(inputSelectors, computeResult) {
       }
     }
 
-    const result =
-      isCached && !shouldCompute
-        ? prevResult
-        : computeResult.call(computeResult, inputs, context, props);
+    const result = isCached && !shouldCompute ? prevResult : computeResult.call(computeResult, inputs, context, props);
 
-    if (runtime.isBrowser) {
+    if (isBrowser) {
       prevInputs = inputs;
       prevProps = props;
       prevResult = result;
@@ -36,4 +33,4 @@ module.exports = function select(inputSelectors, computeResult) {
 
     return result;
   };
-};
+}
