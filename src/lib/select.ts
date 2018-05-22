@@ -1,9 +1,9 @@
 import { isEqual } from '@yr/is-equal';
 import { isBrowser } from '@yr/runtime';
 
-export type SomeFn = (selectors: any[], context?: any, props?: any) => any;
+export type ComputeResultFunction = (selectors: any[], context?: any, props?: any) => any;
 
-export function select(inputSelectors: Function[], computeResult: SomeFn) {
+export function select(inputSelectors: Function[], computeResult: ComputeResultFunction) {
   const n = inputSelectors.length;
   let prevInputs: any, prevProps: any, prevResult: any;
 
