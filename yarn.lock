@@ -48,7 +48,7 @@
     debug "3.x.x"
     is-plain-obj "1.1.x"
 
-"@yr/is-equal@2.0.2":
+"@yr/is-equal@^2.0.2":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@yr/is-equal/-/is-equal-2.0.2.tgz#e039c51074cf14ac9d4b0a01804034cc0bc94c64"
   dependencies:
