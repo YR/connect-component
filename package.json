@@ -6,8 +6,7 @@
   "dependencies": {
     "@yr/is-equal": "^2.0.2",
     "@yr/runtime": "^3.0.0",
-    "prop-types": "^15.6.1",
-    "react": "^16.3.2"
+    "prop-types": "^15.6.1"
   },
   "devDependencies": {
     "@types/prop-types": "^15.5.2",
@@ -37,5 +36,8 @@
     "clean": "rimraf dist/",
     "prepublish": "npm run build",
     "test": "NODE_ENV=test mocha src/**/*.spec.tsx -r ts-node/register  --reporter spec --bail"
+  },
+  "peerDependencies": {
+    "react": ">=16.0.0"
   }
 }
